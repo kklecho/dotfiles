@@ -51,6 +51,10 @@ alias kei="ssh kshishkin@kei"
 alias m="ssh m"
 alias n="ssh n"
 
+alias dev="ssh devkklecho.ddns.net"
+alias devup="ec2up $DEV_EC2_INSTANCE"
+alias devdown="ec2down $DEV_EC2_INSTANCE"
+
 #databasess
 alias tdbm1db="mysql --defaults-group-suffix=_tdbm1"
 alias tdbs1db="mysql --defaults-group-suffix=_tdbs1"
