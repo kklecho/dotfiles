@@ -46,10 +46,11 @@ alias tn2="ssh kkl@tn2"
 alias tdbm1="ssh kkl@tdbm1"
 alias tds1="ssh kkl@tdbs1"
 alias tstatic="ssh kkl@tstatic"
-alias kei="ssh kshishkin@kei"
+alias kei="ssh $KEI_USER@kei"
 
 alias m="ssh m"
 alias n="ssh n"
+alias kei="ssh kshishkin@kei"
 
 alias dev="ssh devkklecho.ddns.net"
 alias devup="ec2up $DEV_EC2_INSTANCE"
