@@ -3,6 +3,7 @@ syntax on
 " Wrap gitcommit file types at the appropriate length
 filetype indent plugin on
 
+" set tabs size to 4 spaces, hitting tab will enter spaces
 set nocompatible
 colo torte
 syntax on
@@ -10,3 +11,6 @@ set tabstop     =4
 set softtabstop =4
 set shiftwidth  =4
 set expandtab
+
+" show line numbers
+set number
