@@ -5,6 +5,11 @@ alias cls='clear'
 #utility
 alias histrel="history | grep -v 'ls' | grep -v 'history' | grep -v 'cat' | grep -v 'clear' | grep -v 'cd' | grep -v 'systemctl' | grep -v 'journalctl'  | grep -v 'man ' | grep -v 'apt ' | sort -r | head -n 500"
 alias pst="lpass show $1 --password -c"
+
+# the below is for copying pipe output ot clipboard on ubuntu
+# ls | clip
+alias clip='xsel -ib'
+
 alias netrestart="sudo systemctl restart network-manager"
 
 alias localrc="code ~/.localrc --reuse-window"
