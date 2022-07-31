@@ -7,20 +7,10 @@ alias histrel="history | grep -v 'ls' | grep -v 'history' | grep -v 'cat' | grep
 alias pst="lpass show $1 --password -c"
 alias netrestart="sudo systemctl restart network-manager"
 
-alias dc="docker-compose"
-alias dcu="docker-compose up -d"
-alias dcs="docker-compose stop"
-alias d="docker"
-
-alias dcb="docker-compose build"
-alias dce='docker-compose exec'
-alias dcl='docker-compose logs'
-alias dcps='docker-compose ps'
-alias docker_daemon_stop='sudo snap stop docker'
-alias docker_daemon_start='sudo snap start docker'
-alias phps="docker-compose run php_server bash"
-alias docker_clean_images='docker rmi $(docker images -a --filter=dangling=true -q)'
-alias docker_clean_ps='docker rm $(docker ps --filter=status=exited --filter=status=created -q)'
+alias localrc="code ~/.localrc --reuse-window"
+alias proj="cd $PROJECT1 && e ."
+alias proj2="cd $PROJECT2 && e ."
+alias admin="cd $ADMIN && e ."
 
 #project juggling
 alias projtolocal="rsync -a ~/project/ ~/ProjectLocal/ --delete"
@@ -30,8 +20,6 @@ alias projarchivetopendrive="rsync -av ~/PersonalProjects/ /media/kkl/ProjectsEn
 function projfromarchives() { sudo rm -R ~/project/* ~/ProjectLocal/*; cp ~/PersonalProjects/$1.7z ~/Project/; cd ~/Project; 7z x *.7z; }
 alias projfromusb="rsync -av /media/ProjectArchive/PersonalProjects/ ~/PersonalProjects/"
 alias projtousb="rsync -av ~/PersonalProjects/ /media/ProjectArchive/PersonalProjects/"
-alias proj="cd ~/project"
-alias projl="cd ~/ProjectLocal"
 
 #security
 alias ip6down="sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1"
@@ -56,19 +44,16 @@ alias dev="ssh devkklecho.ddns.net"
 alias devup="ec2up $DEV_EC2_INSTANCE"
 alias devdown="ec2down $DEV_EC2_INSTANCE"
 
+alias phps="docker-compose run php_server bash"
+
 #databasess
 alias tdbm1db="mysql --defaults-group-suffix=_tdbm1"
 alias tdbs1db="mysql --defaults-group-suffix=_tdbs1"
-alias dbdump="mysqldump $1 | gzip > ~/dumps/$1.sql.gz"
+alias mydump="mysqldump $1 | gzip > ~/dumps/$1.sql.gz"
 
 #paths
 alias repos="cd ~/repos"
 alias apps="cd ~/apps"
-alias app="cd ~/app"
-
-#clouds
-alias ec2down="aws ec2 stop-instances --instance-ids $1"
-alias ec2up="aws ec2 start-instances --instance-ids $1"
 
 #dev
 # dev symfony
