@@ -13,9 +13,10 @@ alias clip='xsel -ib'
 alias netrestart="sudo systemctl restart network-manager"
 
 alias localrc="code ~/.localrc --reuse-window"
-alias proj="cd $PROJECT1 && e ."
-alias proj2="cd $PROJECT2 && e ."
-alias admin="cd $ADMIN && e ."
+alias proj="cd $PROJECT1"
+alias proj2="cd $PROJECT2"
+alias admin="cd $ADMIN"
+alias bd="cd ~/Documents/brain_dump/"
 
 #project juggling
 alias projtolocal="rsync -a ~/project/ ~/ProjectLocal/ --delete"
