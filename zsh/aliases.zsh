@@ -16,7 +16,7 @@ alias localrc="code ~/.localrc --reuse-window"
 alias proj="cd $PROJECT1"
 alias proj2="cd $PROJECT2"
 alias admin="cd $ADMIN"
-alias bd="cd ~/Documents/brain_dump/"
+alias plan="cd ~/Documents/plan/"
 
 #project juggling
 alias projtolocal="rsync -a ~/project/ ~/ProjectLocal/ --delete"
