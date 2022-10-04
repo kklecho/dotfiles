@@ -46,7 +46,7 @@ alias m="ssh m"
 alias n="ssh n"
 alias kei="ssh kshishkin@kei"
 
-alias dev="ssh devkklecho.ddns.net"
+alias dev="ssh kkl@devkklecho.ddns.net"
 alias devup="ec2up $DEV_EC2_INSTANCE"
 alias devdown="ec2down $DEV_EC2_INSTANCE"
 
