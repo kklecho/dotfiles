@@ -3,5 +3,5 @@
 # Moves file or dir to ~/scratch/scraps
 
 function scrap() { 
-    [[ -f <file> ]] && mkdir -p ~/scratch/scraps; mv $1 ~/scratch/scraps/ 
+    [[ -f $1 || -d $1 ]] && mkdir -p ~/scratch/scraps/ ; mv $1 ~/scratch/scraps/$1 
 }
