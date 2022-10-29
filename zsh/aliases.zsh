@@ -91,4 +91,4 @@ alias a="php artisan"
 function qq() { grep '^[A-Z]' "$quiz_file" | sed "$1"'!d'; }
 function qa() { grep '^ ' "$quiz_file" | sed "$1"'!d'; }
 
-lias df='df -h -x squashfs -x tmpfs -x devtmpfs'
+alias df='df -h -x squashfs -x tmpfs -x devtmpfs'
