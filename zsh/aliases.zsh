@@ -17,7 +17,6 @@ alias clibreak="sed -i.bak 's/ -- \\\\\n --/g'"
 alias scratchpy="mkdir -p ~/scratch/py && cd ~/scratch/py && e ."
 alias scratcsql="mkdir -p ~/scratch/sql && cd ~/scratch/sql && e ."
 alias scratchp="mkdir -p ~/scratch/php && cd ~/scratch/php && e ."
-function scrap() { mkdir -p ~/scratch/scraps && mv $1 ~/scratch/scraps/ }
 alias reload!='. ~/.zshrc'
 
 alias cls='clear'

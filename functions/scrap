@@ -1,0 +1,7 @@
+#!/bin/sh
+# Usage: scrap <file or dir>
+# Moves file or dir to ~/scratch/scraps
+
+function scrap() { 
+    [[ -f <file> ]] && mkdir -p ~/scratch/scraps; mv $1 ~/scratch/scraps/ 
+}
