@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+import pathlib
+import sys
+import os
+import argparse
+
+def _main(sysargs: list) -> None:
+    args = _params(sysargs)
+    pth = pathlib.Path(args["path"])
+
+    libname = pth.stem
+    file_name = pth.name
+
+    pkg_path = pathlib.Path(f"~/repos/{libname}")
+    if not pkg_path.exists():
+        os.system(f"poetry new {str(pkg_path)}")
+
+    os.system(f"mv {str(pth)} ~/repos/{str(libname)}/{str(file_name)}")
+
+    pth_test = pathlib.Path(pth.parent.parent / f"tests/test_{file_name}" )
+
+    if pth_test.exists():
+        os.system(f"mv {str(pth_test)} ~/repos/{str(libname)}/tests/")
+
+
+def _params(sysargs: list) -> dict:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("path")
+
+    args, _ = parser.parse_known_args(sysargs)
+
+    return vars(args)
+
+
+if __name__ == "__main__":
+    _main(sys.argv[1:])
