@@ -92,3 +92,5 @@ function qq() { grep '^[A-Z]' "$quiz_file" | sed "$1"'!d'; }
 function qa() { grep '^ ' "$quiz_file" | sed "$1"'!d'; }
 
 alias df='df -h -x squashfs -x tmpfs -x devtmpfs'
+
+alias shortshell='export PS1="$ "'
