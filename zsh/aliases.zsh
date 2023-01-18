@@ -1,8 +1,8 @@
 #alias prf_="export AWS_PROFILE="
 alias adm="cd $PATH_ADMIN"
 alias prj="cd $PATH_PROJECT"
-alias ,up="prj && .devup.sh"
-alias ,dwn="prj && .devdown.sh"
+alias ,up="prj && ./.devup.sh"
+alias ,dwn="prj && ./.devdown.sh"
 
 alias ,t="~/,t"
 alias ,t2="~/,t2"
