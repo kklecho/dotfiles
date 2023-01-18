@@ -1,6 +1,8 @@
 #alias prf_="export AWS_PROFILE="
 alias adm="cd $PATH_ADMIN"
 alias prj="cd $PATH_PROJECT"
+alias ,up="prj && .devup.sh"
+alias ,dwn="prj && .devdown.sh"
 
 alias ,t="~/,t"
 alias ,t2="~/,t2"
@@ -63,7 +65,6 @@ alias kei="ssh $KEI_USER@kei"
 
 alias m="ssh m"
 alias n="ssh n"
-alias kei="ssh kshishkin@kei"
 
 alias dev="ssh kkl@devkklecho.ddns.net"
 alias devup="ec2up $DEV_EC2_INSTANCE"
