@@ -33,7 +33,15 @@ alias clip='xsel -ib'
 
 alias netrestart="sudo systemctl restart network-manager"
 
-alias localrc="code ~/.localrc --reuse-window"
+
+if ! command -v code &> /dev/null
+then
+    alias localrc="code ~/.localrc --reuse-window"
+else
+    alias localrc="e ~/.localrc"
+fi
+
+
 alias proj="cd $PROJECT1"
 alias proj2="cd $PROJECT2"
 alias admin="cd $ADMIN"
