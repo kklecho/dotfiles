@@ -32,7 +32,7 @@ alias pst="lpass show $1 --password -c"
 alias clip='xsel -ib'
 
 alias netrestart="sudo systemctl restart network-manager"
-
+alias dotu="(cd ~/.dotfiles/ && git pull)"
 
 if ! command -v code &> /dev/null
 then
