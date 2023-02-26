@@ -27,7 +27,7 @@ def _params(sysargs: list) -> dict:
     parser = argparse.ArgumentParser()
     parser.add_argument("path")
 
-    args, _ = parser.parse_known_args(sysargs)
+    args, _ = parser.parse_args(sysargs)
 
     return vars(args)
 
