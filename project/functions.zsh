@@ -66,7 +66,7 @@ function lg(){
 
     if [[ $what == "brk" ]]; then
         echo "$now,,,,BREAK" >> $PATH_WORKLOG_CSV
-        tac $PATH_WORKLOG_CSV | head -n 1
+        tac $PATH_WORKLOG_CSV | head -n 2
         return 0
     fi
 
@@ -80,7 +80,7 @@ function lg(){
     fi
 
 
-    tac $PATH_WORKLOG_CSV | head -n 10
+    tac $PATH_WORKLOG_CSV | head -n 5
 }
 
 function now(){
