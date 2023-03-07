@@ -34,6 +34,18 @@ function nowtsk(){
     export NOW_TASK=$task 
 }
 
+function nowtic(){ 
+    ticket=$*
+
+    if [ -z "ticket" ]; then
+        echo "Ticket name is required"
+        return 1
+    fi
+
+    echo 'export NOW_TICKET="'$ticket'"' >> ~/.localrc;
+    export NOW_TICKET=$ticket 
+}
+
 function lg(){ 
     # work log
     now=$(date +"%Y-%m-%dT%H:%M:%S")
@@ -59,13 +71,19 @@ function lg(){
         return 1
     fi
 
+    if [ -z "$NOW_TICKET" ]; then
+        ticket=""
+    else
+        ticket=$NOW_TICKET
+    fi
+
     if [ ! -f $PATH_WORKLOG_CSV ]; then
         touch $PATH_WORKLOG_CSV
-        echo "date,client,project,task,what" > $PATH_WORKLOG_CSV
+        echo "date,client,project,task,ticket,what" > $PATH_WORKLOG_CSV
     fi
 
     if [[ $what == "brk" ]]; then
-        echo "$now,,,,BREAK" >> $PATH_WORKLOG_CSV
+        echo "$now,,,,,BREAK" >> $PATH_WORKLOG_CSV
         tac $PATH_WORKLOG_CSV | head -n 2
         return 0
     fi
@@ -76,7 +94,7 @@ function lg(){
         echo "or lg"
         tac $PATH_WORKLOG_CSV
     else
-        echo "$now,\"$NOW_CLIENT\",\"$NOW_PROJECT\",\"$NOW_TASK\",\"$what\"" >> $PATH_WORKLOG_CSV
+        echo "$now,\"$NOW_CLIENT\",\"$NOW_PROJECT\",\"$NOW_TASK\",\"$NOW_TICKET\",\"$what\"" >> $PATH_WORKLOG_CSV
     fi
 
 
@@ -87,6 +105,7 @@ function now(){
     echo "NOW_CLIENT: $NOW_CLIENT"
     echo "NOW_PROJECT: $NOW_PROJECT"
     echo "NOW_TASK: $NOW_TASK"
+    echo "NOW_TICKET: $NOW_TICKET"
     tac $PATH_WORKLOG_CSV | head -n 5
 }
 
