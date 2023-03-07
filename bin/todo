@@ -1,18 +1,64 @@
-#!/bin/sh
-#
-# Creates something for me to do.
-#
-# I've used literally every todo list, app, program, script, everything. Even
-# the ones you are building and haven't released yet.
-#
-# I've found that they're all nice in their nice ways, but I still don't use
-# them, thus defeating the purpose of a todo list.
-#
-# All `todo` does is put a file on my Desktop with the filename given. That's
-# it. I aggressively prune my desktop of old tasks and keep one or two on there
-# at a time. Once I've finished a todo, I just delete the file. That's it.
-#
-# Millions of dollars later and `touch` wins.
+#!/usr/bin/env python3
+# writes todo file on desktop; only slightly more complex than the original shell version
 
-# Run our new web 2.0 todo list application and raise millions of VC dollars.
-touch ~/Desktop/TODO_"$*"
+import pathlib
+import sys
+import os
+import argparse
+from functools import reduce
+
+def _main(sysargs: list) -> None:
+    args = _params(sysargs)
+
+
+    what = args["what"]
+
+    cli = args["c"]
+    project = args["p"]
+    task = args["t"]
+    ticket = args["j"]
+
+    parts = []
+
+    if cli is not None:
+        parts.append(cli)
+
+    if project is not None:
+        parts.append(project)
+
+    if task is not None:
+        parts.append(task)
+    
+    if ticket is not None:
+        parts.append(ticket)
+
+    parts.append(what)
+
+    what = "_".join(parts)
+    what = what.rstrip("_")
+
+    todo_file_path = pathlib.Path.home() / "Desktop" / f"TODO_{what}.txt"
+
+    todo_file_path.touch(exist_ok=True)
+
+    print(todo_file_path)
+
+
+def _params(sysargs: list) -> dict:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("what", help="what to do")
+    parser.add_argument("-c", help="client")
+    parser.add_argument("-p", help="project")
+    parser.add_argument("-t", help="task")
+    parser.add_argument("-j", help="ticket")
+
+    args, unknown_args = parser.parse_known_args(sysargs)
+
+    what_rest = "_".join(unknown_args)
+    args.what = args.what + "_" + what_rest
+
+    return vars(args)
+
+
+if __name__ == "__main__":
+    _main(sys.argv[1:])
