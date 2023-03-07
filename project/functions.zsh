@@ -50,6 +50,12 @@ function lg(){
     # work log
     now=$(date +"%Y-%m-%dT%H:%M:%S")
     what=$*
+    des=""
+
+    if [[ ($# -gt 1) && (($1=="adhoc") || ($1=="brk")) ]]; then
+        what=$1
+        des=$2
+    fi
 
     if [ -z "$PATH_WORKLOG_CSV" ]; then
         echo "PATH_WORKLOG_CSV is not set"
@@ -83,10 +89,17 @@ function lg(){
     fi
 
     if [[ $what == "brk" ]]; then
-        echo "$now,,,,,BREAK" >> $PATH_WORKLOG_CSV
+        echo "$now,BREAK,BREAK,BREAK,BREAK,\"$des\"" >> $PATH_WORKLOG_CSV
         tac $PATH_WORKLOG_CSV | head -n 2
         return 0
     fi
+
+    if [[ $what == "adhoc" ]]; then
+        echo "$now,ADHOC,ADHOC,ADHOC,ADHOC,\"$des\"" >> $PATH_WORKLOG_CSV
+        tac $PATH_WORKLOG_CSV | head -n 2
+        return 0
+    fi
+
 
     if [ -z "$what" ]; then
         echo "lg brk"
