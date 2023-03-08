@@ -13,6 +13,7 @@ def _main(sysargs: list) -> None:
 
     what = args["what"]
 
+    who = args["w"]
     cli = args["c"]
     project = args["p"]
     task = args["t"]
@@ -22,6 +23,9 @@ def _main(sysargs: list) -> None:
 
     if cli is not None:
         parts.append(cli)
+
+    if who is not None:
+        parts.append(who)
 
     if project is not None:
         parts.append(project)
@@ -51,6 +55,7 @@ def _params(sysargs: list) -> dict:
     parser.add_argument("-p", help="project")
     parser.add_argument("-t", help="task")
     parser.add_argument("-j", help="ticket")
+    parser.add_argument("-w", help="who", default=os.environ["ME"])
 
     args, unknown_args = parser.parse_known_args(sysargs)
 
