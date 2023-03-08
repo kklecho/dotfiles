@@ -51,7 +51,7 @@ def _main(sysargs: list) -> None:
 def _params(sysargs: list) -> dict:
     parser = argparse.ArgumentParser()
     parser.add_argument("what", help="what to do")
-    parser.add_argument("-c", help="client")
+    parser.add_argument("-c", help="client", default=os.getenv("CLI"))
     parser.add_argument("-p", help="project")
     parser.add_argument("-t", help="task")
     parser.add_argument("-j", help="ticket")
