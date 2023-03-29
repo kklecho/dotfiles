@@ -1,0 +1,1 @@
+alias lrx="lrn $CTX"
