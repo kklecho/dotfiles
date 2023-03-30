@@ -14,12 +14,20 @@ function lrn() {
     fi
 
     echo "\"$context\",\"$question\",\"$answer\"" >> ~/Desktop/${TODAY}_learning.csv
+    echo ~/Desktop/${TODAY}_learning.csv
 }
 
 function lrx() {
-    if [ -z $CTX ]; then
+    if [ -z $CONTEXT ]; then
         echo "No context set"
         return
     fi
-    lrn $CTX $1 $2
+    lrn $CONTEXT $1 $2
+}
+
+
+function ctx() {
+    CONTEXT=$1
+    echo "export CONTEXT=\"$CONTEXT\"" > ~/.localrc
+    echo "Switched context to $CONTEXT"
 }
