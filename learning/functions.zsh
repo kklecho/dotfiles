@@ -8,6 +8,11 @@ function lrn() {
     echo "\n\n--context: $context"
 
     echo "\"$context\",\"$question\",\"$answer\""
+
+    if [ ! -f ~/Desktop/${TODAY}_learning.csv ]; then
+        echo "context,question,answer" > ~/Desktop/${TODAY}_learning.csv
+    fi
+
     echo "\"$context\",\"$question\",\"$answer\"" >> ~/Desktop/${TODAY}_learning.csv
 }
 
