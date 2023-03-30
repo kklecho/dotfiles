@@ -16,3 +16,10 @@ function lrn() {
     echo "\"$context\",\"$question\",\"$answer\"" >> ~/Desktop/${TODAY}_learning.csv
 }
 
+function lrx() {
+    if [ -z $CTX ]; then
+        echo "No context set"
+        return
+    fi
+    lrn $CTX $1 $2
+}

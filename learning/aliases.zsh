@@ -1,1 +1,1 @@
-alias lrx="lrn $CTX"
+alias wrd="lrn wrd:enpl"
