@@ -28,6 +28,6 @@ function lrx() {
 
 function ctx() {
     CONTEXT=$1
-    echo "export CONTEXT=\"$CONTEXT\"" > ~/.localrc
+    echo "export CONTEXT=\"$CONTEXT\"" >> ~/.localrc
     echo "Switched context to $CONTEXT"
 }
