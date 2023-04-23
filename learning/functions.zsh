@@ -8,13 +8,13 @@ function lrn() {
     echo "\n\n--context: $context"
 
     echo "\"$context\",\"$question\",\"$answer\""
-
-    if [ ! -f ~/Desktop/${TODAY}_learning.csv ]; then
-        echo "context,question,answer" > ~/Desktop/${TODAY}_learning.csv
+    
+    if [ ! -f ~/Desktop/lrn/${TODAY}_learning.csv ]; then
+        echo "context,question,answer" > ~/Desktop/lrn/${TODAY}_learning.csv
     fi
 
-    echo "\"$context\",\"$question\",\"$answer\"" >> ~/Desktop/${TODAY}_learning.csv
-    echo ~/Desktop/${TODAY}_learning.csv
+    echo "\"$context\",\"$question\",\"$answer\"" >> ~/Desktop/lrn/${TODAY}_learning.csv
+    echo ~/Desktop/lrn/${TODAY}_learning.csv
 }
 
 function lrx() {
