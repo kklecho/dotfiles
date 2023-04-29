@@ -75,3 +75,51 @@ function minlibit() {
 
     return 1
 }
+
+
+function csv2sqlite() {
+    csvpath=$1
+    csvname=$(basename -- "$csvpath")
+    csvname="${csvname%.*}"
+    cwd_name=$(basename -- "$PWD")
+    dbname=$cwd_name.db
+
+    if [ -z "$csvpath" ]; then
+        echo "Usage: qcsv <csvpath>"
+        return 1
+    fi
+
+    if ! [ -f "$csvpath" ]; then
+        echo "File $csvpath not found"
+        return 1
+    fi
+
+    # create new sqlite db and import csv
+    if [ -f "$dbname" ]; then
+        echo "File $dbname already exists"
+    else
+        echo "Creating $dbname"
+        echo ".mode csv\n.import $csvpath $csvname" | sqlite3 $dbname
+    fi
+
+    # create sql file for further queries
+
+    sqlfile=$csvname.sql
+
+    if [ -f "$sqlfile" ]; then
+        echo "File $sqlfile already exists"
+    else
+        echo "-- $PWD/$dbname" > $sqlfile
+    fi
+
+    # open sqlite db in sqlitebrowser
+    (sqlitebrowser $dbname) &
+    e $sqlfile
+
+    # {
+    # "previewLimit": 50,
+    # "driver": "SQLite",
+    # "database": "/home/kkl/scratch/py/py.db",
+    # "name": "py.db"
+    # }        
+}
