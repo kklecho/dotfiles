@@ -3,22 +3,6 @@ alias adm="cd $PATH_ADMIN"
 alias prj="cd $PATH_PROJECT"
 alias ,up="prj && ./.devup.sh"
 alias ,dwn="prj && ./.devdown.sh"
-
-alias ,t="~/,t"
-alias ,t2="~/,t2"
-alias ,t2e="e ~/,t2"
-alias ,te="e ~/,t"
-alias ,l="~/,l"
-alias ,l2="~/,l2"
-alias ,l2e="e ~/,l2"
-alias ,le="e ~/,l"
-
-# break long cli into multiple lines (useful for aws)
-alias clibreak="sed -i.bak 's/ -- \\\\\n --/g'"
-
-alias scratchpy="mkdir -p ~/scratch/py && cd ~/scratch/py && e ."
-alias scratcsql="mkdir -p ~/scratch/sql && cd ~/scratch/sql && e ."
-alias scratchp="mkdir -p ~/scratch/php && cd ~/scratch/php && e ."
 alias reload!='. ~/.zshrc'
 
 alias cls='clear'
@@ -96,9 +80,6 @@ alias cmp="docker-compose run php_server composer"
 # dev laravel
 alias a="php artisan"
 
-#kkl simple quiz, function trick since aliases don't accept arguments
-function qq() { grep '^[A-Z]' "$quiz_file" | sed "$1"'!d'; }
-function qa() { grep '^ ' "$quiz_file" | sed "$1"'!d'; }
 
 alias df='df -h -x squashfs -x tmpfs -x devtmpfs'
 

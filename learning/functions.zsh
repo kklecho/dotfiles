@@ -31,3 +31,8 @@ function ctx() {
     echo "export CONTEXT=\"$CONTEXT\"" >> ~/.localrc
     echo "Switched context to $CONTEXT"
 }
+
+
+#kkl simple quiz, function trick since aliases don't accept arguments
+function qq() { grep '^[A-Z]' "$quiz_file" | sed "$1"'!d'; }
+function qa() { grep '^ ' "$quiz_file" | sed "$1"'!d'; }
