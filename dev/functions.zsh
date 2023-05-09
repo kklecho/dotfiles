@@ -1,8 +1,11 @@
-function fromminlib() {
+function libfromtemplate() {
     # Create new repo based on minlib
     # Usage: newminlib <repo_name>
 
     new_repo_name=$1
+    new_repo_path=$2
+    template_lib_name=$3
+
     new_repo_path=$HOME/repos/$new_repo_name
     
     if [ -z "$GH_USER" ]; then
@@ -12,7 +15,7 @@ function fromminlib() {
         return 1
     fi
 
-    template_repo=git@github.com:$GH_USER/minlibxx.git
+    template_repo=git@github.com:$GH_USER/$template_lib_name.git
 
     ghfromtemplate $template_repo $new_repo_path
 
@@ -20,6 +23,19 @@ function fromminlib() {
         echo "Repo $new_repo_path not found"
         return 1
     fi
+
+    return 0
+}
+
+function minilib() {
+    # Create new repo based on minlib
+    # Usage: newminlib <repo_name>
+
+    new_repo_name=$1
+    new_repo_path=$HOME/repos/$new_repo_name
+    template=minlibxx
+    
+    libfromtemplate $new_repo_name $new_repo_path $template
     
     mv $new_repo_path/minlibxx.py $new_repo_path/$new_repo_name.py
     mv $new_repo_path/test_minlibxx.py $new_repo_path/test_$new_repo_name.py
@@ -38,6 +54,34 @@ function fromminlib() {
     return 0
 }
 
+
+
+function millib() {
+    # Create new repo based on minlib
+    # Usage: newminlib <repo_name>
+
+    new_repo_name=$1
+    new_repo_path=$HOME/repos/$new_repo_name
+    template=mililibxx
+    
+    libfromtemplate $new_repo_name $new_repo_path $template
+    
+    mv $new_repo_path/mililibxx.py $new_repo_path/$new_repo_name.py
+    mv $new_repo_path/test_mililibxx.py $new_repo_path/test_$new_repo_name.py
+    sed -i "s/mililibxx/$new_repo_name/g" $new_repo_path/$new_repo_name.py
+    sed -i "s/mililibxx/$new_repo_name/g" $new_repo_path/test_$new_repo_name.py
+    sed -i "s/mililibxx/$new_repo_name/g" $new_repo_path/README.md
+    sed -i "s/mililibxx/$new_repo_name/g" $new_repo_path/pyproject.toml
+
+    (
+        cd $new_repo_path && \
+        git add . && \
+        git commit -m "Initial commit" && \
+        git push
+    )
+
+    return 0
+}
 
 function minlibit() {
     file=$1
