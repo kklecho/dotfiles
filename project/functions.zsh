@@ -126,3 +126,10 @@ function prjhere(){
     echo 'export PATH_PROJECT="'$PWD'"' >> ~/.localrc; 
     export PATH_PROJECT=$PWD 
 }
+
+function bm(){ 
+    [[ -z $1 ]] && echo "Usage bm <bookmark_code>" && return 1
+
+    echo 'alias go'$1'="cd '$PWD'"' >> ~/.localrc; 
+    alias go$1="cd $PWD"
+}
