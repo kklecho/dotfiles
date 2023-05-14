@@ -1,8 +1,7 @@
 #alias prf_="export AWS_PROFILE="
 alias adm="cd $PATH_ADMIN"
 alias prj="cd $PATH_PROJECT"
-alias ,up="prj && ./.devup.sh"
-alias ,dwn="prj && ./.devdown.sh"
+
 alias reload!='. ~/.zshrc'
 
 alias cls='clear'
@@ -68,17 +67,6 @@ alias phps="docker-compose run php_server bash"
 alias tdbm1db="mysql --defaults-group-suffix=_tdbm1"
 alias tdbs1db="mysql --defaults-group-suffix=_tdbs1"
 alias mydump="mysqldump $1 | gzip > ~/dumps/$1.sql.gz"
-
-#paths
-alias repos="cd ~/repos"
-alias apps="cd ~/apps"
-
-#dev
-# dev symfony
-alias c="docker-compose run php_server php bin/console"
-alias cmp="docker-compose run php_server composer"
-# dev laravel
-alias a="php artisan"
 
 
 alias df='df -h -x squashfs -x tmpfs -x devtmpfs'

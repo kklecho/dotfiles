@@ -16,3 +16,18 @@ alias clibreak="sed -i.bak 's/ -- \\\\\n --/g'"
 alias scratchpy="mkdir -p ~/scratch/py && cd ~/scratch/py && e ./,py.py"
 alias scratcsql="mkdir -p ~/scratch/sql && cd ~/scratch/sql && e ./,sql.sql"
 alias scratchp="mkdir -p ~/scratch/php && cd ~/scratch/php && e ./,php.php"
+alias ,up="prj && ./.devup.sh"
+alias ,dwn="prj && ./.devdown.sh"
+
+#paths
+alias repos="cd ~/repos"
+alias apps="cd ~/apps"
+
+#dev
+# dev symfony
+alias c="docker-compose exec php_server php bin/console"
+alias cmp="docker-compose exec php_server composer"
+
+# dev laravel
+alias a="php artisan"
+
