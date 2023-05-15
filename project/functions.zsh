@@ -130,6 +130,6 @@ function prjhere(){
 function bm(){ 
     [[ -z $1 ]] && echo "Usage bm <bookmark_code>" && return 1
 
-    echo 'alias go'$1'="cd '$PWD'"' >> ~/.localrc; 
-    alias go$1="cd $PWD"
+    echo 'alias g'$1'="cd '$PWD'"' >> ~/.localrc; 
+    alias g$1="cd $PWD"
 }
