@@ -30,4 +30,4 @@ alias cmp="docker-compose exec php_server composer"
 
 # dev laravel
 alias a="php artisan"
-
+alias u+x="chmod u+x"
