@@ -23,11 +23,4 @@ alias ,dwn="prj && ./.devdown.sh"
 alias repos="cd ~/repos"
 alias apps="cd ~/apps"
 
-#dev
-# dev symfony
-alias c="docker-compose exec php_server php bin/console"
-alias cmp="docker-compose exec php_server composer"
-
-# dev laravel
-alias a="php artisan"
 alias u+x="chmod u+x"
