@@ -14,10 +14,17 @@ alias pst="lpass show $1 --password -c"
 # ls | clip
 alias clip='xsel -ib'
 
+if command -v xsel &> /dev/null
+then
+    alias clip='xsel -ib'
+else
+    alias clip='pbcopy'
+fi
+
 alias netrestart="sudo systemctl restart network-manager"
 alias dotu="(cd ~/.dotfiles/ && git pull)"
 
-if ! command -v code &> /dev/null
+if command -v code &> /dev/null
 then
     alias localrc="code ~/.localrc --reuse-window"
 else
@@ -72,3 +79,4 @@ alias mydump="mysqldump $1 | gzip > ~/dumps/$1.sql.gz"
 alias df='df -h -x squashfs -x tmpfs -x devtmpfs'
 
 alias shortshell='export PS1="$ "'
+alias cpdirname="basename $PWD | clip"
