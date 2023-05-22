@@ -1,6 +1,10 @@
 #alias prf_="export AWS_PROFILE="
 alias adm="cd $PATH_ADMIN"
 alias prj="cd $PATH_PROJECT"
+alias proj="cd $PROJECT1"
+alias proj2="cd $PROJECT2"
+alias admin="cd $ADMIN"
+alias plan="cd ~/Documents/plan/"
 
 alias reload!='. ~/.zshrc'
 
@@ -11,8 +15,6 @@ alias histrel="history | grep -v 'ls' | grep -v 'history' | grep -v 'cat' | grep
 alias pst="lpass show $1 --password -c"
 
 # the below is for copying pipe output ot clipboard on ubuntu
-# ls | clip
-alias clip='xsel -ib'
 
 if command -v xsel &> /dev/null
 then
@@ -32,10 +34,6 @@ else
 fi
 
 
-alias proj="cd $PROJECT1"
-alias proj2="cd $PROJECT2"
-alias admin="cd $ADMIN"
-alias plan="cd ~/Documents/plan/"
 
 #project juggling
 alias projtolocal="rsync -a ~/project/ ~/ProjectLocal/ --delete"
@@ -63,18 +61,6 @@ alias kei="ssh $KEI_USER@kei"
 
 alias m="ssh m"
 alias n="ssh n"
-
-alias dev="ssh kkl@devkklecho.ddns.net"
-alias devup="ec2up $DEV_EC2_INSTANCE"
-alias devdown="ec2down $DEV_EC2_INSTANCE"
-
-alias phps="docker-compose run php_server bash"
-
-#databasess
-alias tdbm1db="mysql --defaults-group-suffix=_tdbm1"
-alias tdbs1db="mysql --defaults-group-suffix=_tdbs1"
-alias mydump="mysqldump $1 | gzip > ~/dumps/$1.sql.gz"
-
 
 alias df='df -h -x squashfs -x tmpfs -x devtmpfs'
 

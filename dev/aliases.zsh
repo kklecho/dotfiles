@@ -24,3 +24,9 @@ alias repos="cd ~/repos"
 alias apps="cd ~/apps"
 
 alias u+x="chmod u+x"
+
+alias phps="docker-compose run php_server bash"
+
+alias dev="ssh kkl@devkklecho.ddns.net"
+alias devup="ec2up $DEV_EC2_INSTANCE"
+alias devdown="ec2down $DEV_EC2_INSTANCE"
