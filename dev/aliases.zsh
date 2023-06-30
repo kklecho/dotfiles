@@ -30,3 +30,5 @@ alias phps="docker-compose run php_server bash"
 alias dev="ssh kkl@devkklecho.ddns.net"
 alias devup="ec2up $DEV_EC2_INSTANCE"
 alias devdown="ec2down $DEV_EC2_INSTANCE"
+
+alias dmig="c doctrine:migrations:migrate"
