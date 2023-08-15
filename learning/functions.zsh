@@ -9,12 +9,12 @@ function lrn() {
 
     echo "\"$context\",\"$question\",\"$answer\""
     
-    if [ ! -f ~/Desktop/lrn/${TODAY}_learning.csv ]; then
-        echo "context,question,answer" > ~/Desktop/lrn/${TODAY}_learning.csv
+    if [ ! -f ~/lrn/${TODAY}_learning.csv ]; then
+        echo "context,question,answer" > ~/lrn/${TODAY}_learning.csv
     fi
 
-    echo "\"$context\",\"$question\",\"$answer\"" >> ~/Desktop/lrn/${TODAY}_learning.csv
-    echo ~/Desktop/lrn/${TODAY}_learning.csv
+    echo "\"$context\",\"$question\",\"$answer\"" >> ~/lrn/${TODAY}_learning.csv
+    echo ~/lrn/${TODAY}_learning.csv
 }
 
 function lrx() {
