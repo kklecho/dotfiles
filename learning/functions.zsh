@@ -3,18 +3,20 @@ function lrn() {
     question=$2
     answer=$3
     TODAY=$(date +%Y%m%d)
+    FILE_PATH=~/lrn/${HOST}_${TODAY}_learning.csv
+
     echo "$question \n\t$answer"
 
     echo "\n\n--context: $context"
 
     echo "\"$context\",\"$question\",\"$answer\""
     
-    if [ ! -f ~/lrn/${TODAY}_learning.csv ]; then
-        echo "context,question,answer" > ~/lrn/${TODAY}_learning.csv
+    if [ ! -f $FILE_PATH ]; then
+        echo "context,question,answer" > $FILE_PATH
     fi
 
-    echo "\"$context\",\"$question\",\"$answer\"" >> ~/lrn/${TODAY}_learning.csv
-    echo ~/lrn/${TODAY}_learning.csv
+    echo "\"$context\",\"$question\",\"$answer\"" >> $FILE_PATH
+    echo $FILE_PATH
 }
 
 function lrx() {
