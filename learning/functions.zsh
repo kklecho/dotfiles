@@ -27,6 +27,14 @@ function lrx() {
     lrn $CONTEXT $1 $2
 }
 
+function lrpsh(){
+    rsync -av ~/lrn/ ${KEI_SSH_USER}@${KEI_SSH_HOST}:~/lrn/
+}
+
+function lrpl(){
+    rsync -av ${KEI_SSH_USER}@${KEI_SSH_HOST}:~/lrn/ ~/lrn/
+}
+
 
 function ctx() {
     CONTEXT=$1
