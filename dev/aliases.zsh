@@ -10,6 +10,7 @@ alias ,l2="~/,l2"
 alias ,l2e="e ~/,l2"
 alias ,le="e ~/,l"
 alias ,py="./,py"
+alias ,s="./,s"
 
 # break long cli into multiple lines (useful for aws)
 alias clibreak="sed -i.bak 's/ -- \\\\\n --/g'"
