@@ -28,7 +28,7 @@ function hj() {
         return 1
     fi
 
-    cp jl/$relpath hop/$relpath
+    cp hop/$relpath jl/$relpath
 }
 
 function jh() {
