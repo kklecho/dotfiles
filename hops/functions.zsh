@@ -6,29 +6,27 @@ function hj() {
         return 1
     fi
 
-    cd $HOPAPS
-
-    if [ -z "relpath" ]; then
+    if [ ! -f "${HOPAPS}/hop/${relpath}" ]; then
         echo "Usage: hj <relpath>"
         return 1
     fi
 
-    if [ ! -d "hop" ]; then
+    if [ ! -d "${HOPAPS}/hop" ]; then
         echo "hop dir not found exists"
         return 1
     fi
 
-    if [ ! -d "jl" ]; then
+    if [ ! -d "${HOPAPS}/jl" ]; then
         echo "jl dir not found exists"
         return 1
     fi
 
-    if [ ! -f "hop/$relpath" ]; then
-        echo "hop dir not found exists"
+    if [ ! -f "${HOPAPS}/hop/$relpath" ]; then
+        echo "file ${HOPAPS}/hop/$relpath not found"
         return 1
     fi
 
-    cp hop/$relpath jl/$relpath
+    cp ${HOPAPS}/hop/$relpath ${HOPAPS}/jl/$relpath
 }
 
 function jh() {
@@ -39,27 +37,25 @@ function jh() {
         return 1
     fi
 
-    cd $HOPAPS
-
-    if [ -z "relpath" ]; then
-        echo "Usage: hj <relpath>"
+    if [ -z "${HOPAPS}/jl/${relpath}" ]; then
+        echo "Usage: jh <relpath>"
         return 1
     fi
 
-    if [ ! -d "hop" ]; then
+    if [ ! -d "${HOPAPS}/hop" ]; then
         echo "hop dir not found exists"
         return 1
     fi
 
-    if [ ! -d "jl" ]; then
+    if [ ! -d "${HOPAPS}/jl" ]; then
         echo "jl dir not found exists"
         return 1
     fi
 
-    if [ ! -f "jl/$relpath" ]; then
-        echo "hop dir not found exists"
+    if [ ! -f "${HOPAPS}/jl/$relpath" ]; then
+        echo "file ${HOPAPS}/jl/$relpath not found"
         return 1
     fi
 
-    cp jl/$relpath hop/$relpath
+    cp ${HOPAPS}/jl/$relpath ${HOPAPS}/hop/$relpath
 }
