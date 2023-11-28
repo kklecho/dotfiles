@@ -1,1 +1,1 @@
-alias cdr="code --reuse-window"
+alias cdre="code --reuse-window"
