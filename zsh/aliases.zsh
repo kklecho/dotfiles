@@ -13,7 +13,7 @@ alias cls='clear'
 #utility
 alias histrel="history | grep -v 'ls' | grep -v 'history' | grep -v 'cat' | grep -v 'clear' | grep -v 'cd' | grep -v 'systemctl' | grep -v 'journalctl'  | grep -v 'man ' | grep -v 'apt ' | sort -r | head -n 500"
 alias pst="lpass show $1 --password -c"
-
+alias pwdclp="echo $PWD | clip"
 # the below is for copying pipe output ot clipboard on ubuntu
 
 if command -v xsel &> /dev/null
