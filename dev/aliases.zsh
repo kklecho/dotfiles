@@ -33,3 +33,4 @@ alias devup="ec2up $DEV_EC2_INSTANCE"
 alias devdown="ec2down $DEV_EC2_INSTANCE"
 
 alias dmig="c doctrine:migrations:migrate"
+alias mytmp="mktemp -d -t kkl_XXX"
