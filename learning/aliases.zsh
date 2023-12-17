@@ -1,3 +1,3 @@
 alias wrd="lrn wrd:enpl"
-alias lrns="e ~/Desktop/lrn"
-alias lrnsclr="cd ~/Desktop/lrn && rm *.csv"
+alias lrns="e ~/lrn"
+alias lrnsclr="cd ~/lrn && rm *.csv"
