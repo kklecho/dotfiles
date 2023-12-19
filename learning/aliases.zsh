@@ -1,3 +1,6 @@
 alias wrd="lrn wrd:enpl"
-alias lrns="e ~/lrn"
-alias lrnsclr="cd ~/lrn && rm *.csv"
+alias lrs="e ~/lrn"
+alias lrsclr="cd ~/lrn && rm *.csv"
+alias lrsync="cd ~/lrn && rm *.csv"
+alias lrnsync="echo 'us lrpush or lrpull'"
+alias lrns="echo 'us lrs'"
