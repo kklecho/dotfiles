@@ -35,7 +35,7 @@ There's a few special files in the hierarchy.
   but still keep those autoloaded files in your home directory. These get
   symlinked in when you run `script/bootstrap`.
 
-## install
+## Install on your machine
 
 Run this:
 
@@ -43,7 +43,14 @@ Run this:
 git clone https://github.com/kklecho/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 script/bootstrap
-cat .dotfiles/zsh/zshrc.addition.snippet >> ~/.zshrc
+```
+
+## Install on devcontainer
+
+```sh
+git clone https://github.com/kklecho/dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
+script/bootstrap-devcontainer
 ```
 
 This will symlink the appropriate files in `.dotfiles` to your home directory.
