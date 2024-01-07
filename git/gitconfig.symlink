@@ -34,4 +34,4 @@
 [credential]
 	helper = osxkeychain
 [init]
-	templatedir = /home/kkl/.git-template
+	templatedir =  ~/.git-template
