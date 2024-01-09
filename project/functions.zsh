@@ -133,3 +133,9 @@ function bm(){
     echo 'alias g'$1'="cd '$PWD'"' >> ~/.localrc; 
     alias g$1="cd $PWD"
 }
+
+
+function kl(){ catchup.py 'kl' "$*"; }
+function klr(){ catchup.py 'klr' "$*"; }
+function oa(){ catchup.py 'oa' "$*"; }
+function rl(){ catchup.py 'rl' "$*"; }
