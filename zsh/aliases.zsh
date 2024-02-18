@@ -1,4 +1,4 @@
-#alias prf_="export AWS_PROFILE="
+alias prf_="export AWS_PROFILE="
 alias adm="cd $PATH_ADMIN"
 alias prj="cd $PATH_PROJECT"
 alias proj="cd $PROJECT1"
@@ -57,7 +57,7 @@ alias tn2="ssh kkl@tn2"
 alias tdbm1="ssh kkl@tdbm1"
 alias tds1="ssh kkl@tdbs1"
 alias tstatic="ssh kkl@tstatic"
-alias kei="ssh $KEI_USER@kei"
+alias kei="ssh $KEI_SSH_USER@kei"
 
 alias m="ssh m"
 alias n="ssh n"
@@ -65,4 +65,5 @@ alias n="ssh n"
 alias df='df -h -x squashfs -x tmpfs -x devtmpfs'
 
 alias shortshell='export PS1="$ "'
+alias sts='shortshell'
 alias cpdirname="basename $PWD | clip"
