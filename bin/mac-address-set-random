@@ -6,6 +6,6 @@ end=$( for i in {1..6} ; do echo -n ${hexchars:$(( $RANDOM % 16 )):1} ; done | s
 rndmac="00:60:2F$end"
 
 echo "Setting $interface mac to $rndmac" 
-ip link set dev $interface down
-ip link set dev $interface address $rndmac
-ip link set dev $interface up
+sudo ip link set dev $interface down
+sudo ip link set dev $interface address $rndmac
+sudo ip link set dev $interface up
