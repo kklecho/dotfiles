@@ -1,7 +1,5 @@
 alias prf_="export AWS_PROFILE="
 alias adm="cd $PATH_ADMIN"
-alias prj="cd $PATH_PROJECT"
-alias proj="cd $PROJECT1"
 alias proj2="cd $PROJECT2"
 alias admin="cd $ADMIN"
 alias plan="cd ~/Documents/plan/"
