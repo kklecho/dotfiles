@@ -1,5 +1,8 @@
-# export LSCOLORS="exfxcxdxbxegedabagacad"
-# export CLICOLOR=true
+export LSCOLORS="exfxcxdxbxegedabagacad"
+export CLICOLOR=true
+
+# FORCE_COLOR is used by hatch, but looks generic
+export FORCE_COLOR=true
 
 fpath=($ZSH_DOTFILES/functions $fpath)
 
