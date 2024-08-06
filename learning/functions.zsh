@@ -12,10 +12,10 @@ function lrn() {
     echo "\"$context\",\"$question\",\"$answer\""
     
     if [ ! -f $FILE_PATH ]; then
-        echo "context,question,answer" > $FILE_PATH
+        echo "question:answer:context" > $FILE_PATH
     fi
 
-    echo "\"$context\",\"$question\",\"$answer\"" >> $FILE_PATH
+    echo "\"$question\":\"$answer\":\"$context\"" >> $FILE_PATH
     echo $FILE_PATH
 }
 
