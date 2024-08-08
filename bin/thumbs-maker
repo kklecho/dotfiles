@@ -1,0 +1,61 @@
+#!/usr/bin/env python3
+
+import argparse as ap
+import sys
+import os
+import pathlib as plb
+import subprocess
+import tempfile
+
+folder = '.'
+
+def _make_thumbs(parent_path, file_path, tempdir):
+    
+    pass
+
+
+def _main(args: dict):
+
+    with tempfile.TemporaryDirectory("thmbs","kl") as tempdir:
+
+        file_grouping = dict({})
+        folder = args["rootpath"]
+        
+        for currentpath, folders, files in os.walk(folder):
+            for file_name in files:
+                file_path = plb.Path(currentpath, file_name)
+                ext = file_path.suffix.replace(".","").lower()
+                _make_thumbs(currentpath, file_path, tempdir)
+                if ext not in file_grouping:
+                    file_grouping[ext] = []
+                
+                file_grouping[ext].append(str(file_path))
+                print(file_path)
+                # cmd = ['ls', file_path]
+                # process = subprocess.Popen(cmd, 
+                #     stdout=subprocess.PIPE, 
+                #     shell=True,
+                #     universal_newlines=True
+                #     )
+                # output, error = process.communicate()
+
+                # print(str(output))
+
+                break
+
+        print(file_grouping.keys())
+        # print(file_grouping[''])
+        
+
+def _argv(sysargs):
+    parser = ap.ArgumentParser()
+    
+    parser.add_argument('rootpath')
+    args = parser.parse_args(sysargs[1:])
+    args_dict = vars(args)
+
+    return args_dict
+
+if __name__=="__main__":
+    args = _argv(sys.argv)
+    _main(args)
