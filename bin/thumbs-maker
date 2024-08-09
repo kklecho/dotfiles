@@ -30,7 +30,7 @@ def _make_thumb_movie(path, temp_path, thumb_path):
     _l.debug(out)
     _thumb_img(f"{temp_path}", f"{thumb_path}")
     _l.debug(out)
-    plb.Path(temp_path).unlink()
+    plb.Path(temp_path).unlink(missing_ok=True)
 
 def _make_thumb_img(path, tempdir, thumb_path):
     _l.debug("converting img")
