@@ -43,7 +43,6 @@ def _make_thumb(parent_path, file_path, tempdir, tn_folder):
     csum = _checksum(file_path)
     _l.debug("csum: %s %s", csum, file_path)
     
-    
     thumb_dir=plb.Path(tn_folder)
     thumb_dir.mkdir(parents=True, exist_ok=True)
 
