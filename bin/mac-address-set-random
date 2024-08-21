@@ -1,0 +1,11 @@
+#!/bin/bash
+interface=wlo1
+
+hexchars="0123456789ABCDEF"
+end=$( for i in {1..6} ; do echo -n ${hexchars:$(( $RANDOM % 16 )):1} ; done | sed -e 's/\(..\)/:\1/g' )
+rndmac="00:60:2F$end"
+
+echo "Setting $interface mac to $rndmac" 
+sudo ip link set dev $interface down
+sudo ip link set dev $interface address $rndmac
+sudo ip link set dev $interface up

@@ -3,18 +3,20 @@ function lrn() {
     question=$2
     answer=$3
     TODAY=$(date +%Y%m%d)
+    FILE_PATH=~/lrn/${HOST}_${TODAY}_learning.csv
+
     echo "$question \n\t$answer"
 
     echo "\n\n--context: $context"
 
     echo "\"$context\",\"$question\",\"$answer\""
     
-    if [ ! -f ~/Desktop/lrn/${TODAY}_learning.csv ]; then
-        echo "context,question,answer" > ~/Desktop/lrn/${TODAY}_learning.csv
+    if [ ! -f $FILE_PATH ]; then
+        echo "question:answer:context" > $FILE_PATH
     fi
 
-    echo "\"$context\",\"$question\",\"$answer\"" >> ~/Desktop/lrn/${TODAY}_learning.csv
-    echo ~/Desktop/lrn/${TODAY}_learning.csv
+    echo "\"$question\":\"$answer\":\"$context\"" >> $FILE_PATH
+    echo $FILE_PATH
 }
 
 function lrx() {
@@ -23,6 +25,14 @@ function lrx() {
         return
     fi
     lrn $CONTEXT $1 $2
+}
+
+function lrpsh(){
+    rsync -av ~/lrn/ ${KEI_SSH_USER}@${KEI_SSH_HOST}:~/lrn/
+}
+
+function lrpl(){
+    rsync -av ${KEI_SSH_USER}@${KEI_SSH_HOST}:~/lrn/ ~/lrn/
 }
 
 

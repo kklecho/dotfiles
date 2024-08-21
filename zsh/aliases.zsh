@@ -1,7 +1,5 @@
-#alias prf_="export AWS_PROFILE="
+alias prf_="export AWS_PROFILE="
 alias adm="cd $PATH_ADMIN"
-alias prj="cd $PATH_PROJECT"
-alias proj="cd $PROJECT1"
 alias proj2="cd $PROJECT2"
 alias admin="cd $ADMIN"
 alias plan="cd ~/Documents/plan/"
@@ -13,7 +11,7 @@ alias cls='clear'
 #utility
 alias histrel="history | grep -v 'ls' | grep -v 'history' | grep -v 'cat' | grep -v 'clear' | grep -v 'cd' | grep -v 'systemctl' | grep -v 'journalctl'  | grep -v 'man ' | grep -v 'apt ' | sort -r | head -n 500"
 alias pst="lpass show $1 --password -c"
-
+alias pwdclp="echo $PWD | clip"
 # the below is for copying pipe output ot clipboard on ubuntu
 
 if command -v xsel &> /dev/null
@@ -57,7 +55,7 @@ alias tn2="ssh kkl@tn2"
 alias tdbm1="ssh kkl@tdbm1"
 alias tds1="ssh kkl@tdbs1"
 alias tstatic="ssh kkl@tstatic"
-alias kei="ssh $KEI_USER@kei"
+alias kei="ssh $KEI_SSH_USER@kei"
 
 alias m="ssh m"
 alias n="ssh n"
@@ -65,4 +63,5 @@ alias n="ssh n"
 alias df='df -h -x squashfs -x tmpfs -x devtmpfs'
 
 alias shortshell='export PS1="$ "'
+alias sts='shortshell'
 alias cpdirname="basename $PWD | clip"

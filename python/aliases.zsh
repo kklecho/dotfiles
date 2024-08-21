@@ -1,3 +1,5 @@
 alias p="python"
 alias pm="python -m"
-alias act="source venv/bin/activate"
+alias pipi="python -m pip install"
+alias vact="source ./.venv/bin/activate"
+alias dact="deactivate"
