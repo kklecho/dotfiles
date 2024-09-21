@@ -24,12 +24,7 @@ fi
 alias netrestart="sudo systemctl restart network-manager"
 alias dotu="(cd ~/.dotfiles/ && git pull)"
 
-if command -v code &> /dev/null
-then
-    alias localrc="code ~/.localrc --reuse-window"
-else
-    alias localrc="e ~/.localrc"
-fi
+alias localrc="vim ~/.localrc"
 
 
 
