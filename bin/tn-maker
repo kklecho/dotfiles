@@ -9,6 +9,9 @@ import tempfile
 import hashlib
 import logging
 
+movie_exts = {'mp4', 'mts', 'mpg', '3gp', 'wmv', 'mov', 'thm', 'avi'}
+img_exts ={'jpg', 'jpeg', 'png'}
+
 _OVERRIDE=False
 logging.basicConfig(level=logging.DEBUG, encoding='utf-8')
 _l=logging.getLogger(__name__)
@@ -37,8 +40,6 @@ def _make_thumb_img(path, tempdir, thumb_path):
     _thumb_img(path,f"{thumb_path}")
 
 def _make_thumb(parent_path, file_path, tempdir, tn_folder):
-    movie_exts = {'mp4', 'mts', 'mpg', '3gp', 'wmv', 'mov', 'thm'}
-    img_exts ={'jpg', 'jpeg', 'png'}
     ext=_ext(file_path)
     csum = _checksum(file_path)
     _l.debug("csum: %s %s", csum, file_path)
@@ -84,11 +85,8 @@ def _main(args: dict):
                 file_grouping[ext].append(str(file_path))
                 _make_thumb(currentpath, file_path, tempdir, tn_folder)
 
-#            break
-                # print(str(output))
 
         print(file_grouping.keys())
-        # print(file_grouping[''])
         
 
 def _argv(sysargs):
