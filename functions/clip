@@ -1,0 +1,12 @@
+#!/bin/zsh
+
+function clip() {
+    a="$(</dev/stdin)"
+
+    if command -v xsel &> /dev/null
+    then
+        echo $a | xsel -ib
+    else
+        echo $a | pbcopy
+    fi
+}

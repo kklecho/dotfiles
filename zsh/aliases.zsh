@@ -13,13 +13,6 @@ alias histrel="history | grep -v 'ls' | grep -v 'history' | grep -v 'cat' | grep
 alias pwdclp="echo $PWD | clip"
 # the below is for copying pipe output ot clipboard on ubuntu
 
-if command -v xsel &> /dev/null
-then
-    alias clip='xsel -ib'
-else
-    alias clip='pbcopy'
-fi
-
 alias netrestart="sudo systemctl restart network-manager"
 alias dotu="(cd ~/.dotfiles/ && git pull)"
 
