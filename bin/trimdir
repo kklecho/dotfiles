@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Remove all but the last n files from dir
+# files are sorted by names ascending, first names get deleted
+
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <directory> <number_of_files_to_keep>"
+    exit 1
+fi
+
+directory=$1
+num_files_to_keep=$2
+
+if [ ! -d "$directory" ]; then
+    echo "Error: Directory $directory does not exist."
+    exit 1
+fi
+
+total_files=$(ls -1 "$directory" | wc -l)
+
+if [ "$total_files" -le "$num_files_to_keep" ]; then
+    echo "Nothing to do, the directory has $total_files files which is less than or equal to $num_files_to_keep."
+    exit 0
+fi
+
+files_to_delete=$(ls -1 "$directory" | sort | head -n -$num_files_to_keep)
+
+for file in $files_to_delete; do
+    rm "$directory/$file"
+    echo "Deleted $directory/$file"
+done
+
+echo "Deleted $(echo "$files_to_delete" | wc -l) files from $directory."
