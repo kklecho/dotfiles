@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# ./qd a.ddb sql 'sql/[0-2]'
+# ./qd a.ddb sql 'sql/[3-4]'
+
+dir=$1
+grepfilter=${2:-'.'} #sql/[0-9]
+database_file_path=${3:-$DB_FILE_PATH}
+
+function _runqueryfile(){
+    [[ ! -f $1 ]] && echo "E: Not a file $1" && exit 1
+    database_file_path=$2
+
+    # echo 'duckdb '$database_file_path' < '$1
+    duckdb $database_file_path < $1;
+}
+
+[[ ! -d $dir ]] \
+    && echo "$dir dir not found" \
+    && echo "Usage $0 sql-dir [grep-filter-expr:'.'] [db-file-path:DB_FILE_PATH]" \
+    && exit;
+
+echo "---------------START----------------"
+
+for f in $(
+    find $dir -type f -name "*.sql"  \
+    | grep $grepfilter \
+    | sort
+)
+do
+    echo "---------------RUN-----------------"
+    echo ""
+    echo $f
+    echo ""
+    echo "-----------------------------------"
+    echo ""
+    
+    _runqueryfile $f $database_file_path
+
+    echo ""
+    echo "---------------RUN COMPLETED-------"
+    echo ""
+done
+
+echo "---------------DONE----------------"
