@@ -1,12 +1,12 @@
-alias prf_="export AWS_PROFILE="
 alias adm="cd $PATH_ADMIN"
-alias proj2="cd $PROJECT2"
-alias admin="cd $ADMIN"
+
+alias prj1="e $PATH_ADMIN/prj/prj1*"
+alias prj2="e $PATH_ADMIN/prj/prj2*"
+alias prj3="e $PATH_ADMIN/prj/prj3*"
+
 alias plan="cd ~/Documents/plan/"
 
 alias reload!='. ~/.zshrc'
-
-alias cls='clear'
 
 #utility
 alias histrel="history | grep -v 'ls' | grep -v 'history' | grep -v 'cat' | grep -v 'clear' | grep -v 'cd' | grep -v 'systemctl' | grep -v 'journalctl'  | grep -v 'man ' | grep -v 'apt ' | sort -r | head -n 500"
@@ -17,8 +17,6 @@ alias netrestart="sudo systemctl restart network-manager"
 alias dotu="(cd ~/.dotfiles/ && git pull)"
 
 alias localrc="vim ~/.localrc"
-
-
 
 #project juggling
 alias projtolocal="rsync -a ~/project/ ~/ProjectLocal/ --delete"
@@ -51,4 +49,4 @@ alias df='df -h -x squashfs -x tmpfs -x devtmpfs'
 
 alias shortshell='export PS1="$ "'
 alias sts='shortshell'
-alias cpdirname="basename $PWD | clip"
+alias clwdname="basename $PWD | clip"
