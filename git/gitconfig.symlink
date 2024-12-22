@@ -35,3 +35,7 @@
 	helper = osxkeychain
 [init]
 	templatedir =  ~/.git-template
+[user]
+	signingkey = 5284571937112F0F
+[commit]
+	gpgSign = true

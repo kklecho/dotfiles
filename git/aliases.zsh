@@ -29,3 +29,4 @@ alias ge='git-edit-new'
 
 # gitcommitfileschanged <commit_hash>
 alias gitcommitfileschanged='git diff-tree --no-commit-id --name-only -r '
+export GPG_TTY=$(tty)
