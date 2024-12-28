@@ -1,3 +1,12 @@
+function fn_bddone(){
+    if [ ! -f "${PATH_BRAIN_DUMP_TODAY}" ]; then
+        echo "PATH_BRAIN_DUMP_TODAY must be file"
+        return 1
+    fi
+    echo "now:\nnext:\nlater:\n" >> ${PATH_BRAIN_DUMP_DEC_TODAY}
+    sed 's/^/  /g' ${PATH_BRAIN_DUMP_TODAY} >> ${PATH_BRAIN_DUMP_DEC_TODAY}
+}
+
 function nowcli(){ 
     client=$*
 
