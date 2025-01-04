@@ -1,9 +1,4 @@
 alias adm="cd $PATH_ADMIN"
-
-alias prj1="e $PATH_ADMIN/prj/prj1*"
-alias prj2="e $PATH_ADMIN/prj/prj2*"
-alias prj3="e $PATH_ADMIN/prj/prj3*"
-
 alias plan="cd ~/Documents/plan/"
 
 alias reload!='. ~/.zshrc'
@@ -49,4 +44,4 @@ alias df='df -h -x squashfs -x tmpfs -x devtmpfs'
 
 alias shortshell='export PS1="$ "'
 alias sts='shortshell'
-alias clwdname="basename $PWD | clip"
+alias clwdirname="basename $PWD | clip"
