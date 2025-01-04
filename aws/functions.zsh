@@ -20,18 +20,17 @@ function ec2-list-amis-ubuntu() {
         --query 'Images[*].[ImageId,CreationDate,Name,Description]'
 }
 
-function ec2-list-amis-debian() {
-
-    # --filters=Name=name,Values=ubuntu*22.04*amd*202402*
+function ec2-list-amis-debian-bookworm() {
     aws ec2 describe-images \
         --region eu-west-1 \
-        --filters Name=name,Values=debian \
+        --owners "136693071363" \
+        --image-ids ami-0715d656023fe21b4 \
         --output json \
         --query 'Images[*].[ImageId,CreationDate,Name,Description]'
 }
 
 function ec2-create-dev-instance() {
-    
+
     vpcid="vpc-bc785fda"
     snetid="subnet-f17616b9"
     #ami="ami-07e712e7bf719ef62"
