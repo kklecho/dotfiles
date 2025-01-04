@@ -10,3 +10,4 @@ alias syn="cdk synth"
 alias dep="cdk deploy"
 alias labiup='aws ec2 start-instances --instance-ids $LAB_EC2_INSTANCE'
 alias labidown='aws ec2 stop-instances --instance-ids $LAB_EC2_INSTANCE'
+alias ec2-list-security-groups="aws ec2 describe-security-groups --query='SecurityGroups[*].[GroupName,Description,GroupId]'"
