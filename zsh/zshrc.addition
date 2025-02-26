@@ -12,6 +12,12 @@ then
   source ~/.localrc
 fi
 
+if [[ -a $HOME/.cargo/env ]]
+then
+  source $HOME/.cargo/env 
+fi
+
+
 # all of our zsh files
 typeset -U config_files
 config_files=($ZSH_DOTFILES/**/*.zsh)
