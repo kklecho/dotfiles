@@ -1,5 +1,7 @@
 #!/bin/sh
 
+exit 0;
+
 printf 'Do you want to install ddclient (y/n)? '
 read answer
 
