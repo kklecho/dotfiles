@@ -45,3 +45,5 @@ do
 done
 
 unset config_files
+
+plugions=(git z)
