@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-cat .dotfiles/zsh/zshrc.addition.snippet >> ~/.zshrc
+cat $ZSH_DOTFILES/zsh/zshrc.addition.snippet >> ~/.zshrc
