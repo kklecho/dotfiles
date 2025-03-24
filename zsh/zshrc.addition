@@ -46,4 +46,4 @@ done
 
 unset config_files
 
-plugions=(git z)
+plugions=(git z zsh-autosuggestions zsh-syntax-highlighting)
