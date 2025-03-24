@@ -49,6 +49,12 @@ setup_gitconfig () {
   fi
 }
 
+setup_localrc_baseline() {
+  if ! [ -f $HOME/.localrc ]
+  then
+    cp $DOTFILES_ROOT/zsh/.localrc.dist $HOME/.localrc
+  fi
+}
 
 link_file () {
   local src=$1 dst=$2
@@ -139,6 +145,7 @@ install_dotfiles () {
 
 setup_gitconfig
 install_dotfiles
+setup_localrc_baseline
 
 # If we're on a Mac, let's install and setup homebrew.
 if [ "$(uname -s)" == "Darwin" ]
