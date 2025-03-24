@@ -1,10 +1,10 @@
 #!/bin/bash
 
-statement=$1
-[[ -z $statement ]] \
+statement="$1"
+[[ -z "$statement" ]] \
     && echo "Usage $0 'SELECT ...' [db-file-path:DB_FILE_PATH]" \
     && exit 1
 
 database_file_path=${2:-$DB_FILE_PATH}
 
-duckdb $database_file_path -c $statement
+duckdb "$database_file_path" -c "$statement"
