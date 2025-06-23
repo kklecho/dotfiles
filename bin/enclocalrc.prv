@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# Smart directory backup script
+# Backups the directory to encrypted tar.gz file. 
+# Does not keep the backup if the prior backup is the same.
+
+in_dir=$1
+out_parent_dir=$2
+encr_key_file_path=$3
+
+if [[ ! -d "$in_dir" || ! -d "$out_parent_dir" || ! -f "$encr_key_file_path" ]]; then
+    echo "Usage: $0 <input_directory> <output_parent_directory> <encryption_key_file>"
+    exit 1
+fi
+
+input_dir_name=$(basename $in_dir)
+encr_key_file_name=$(basename $encr_key_file_path)
+output_dir=$out_parent_dir/$input_dir_name
+d=$(date +%Y%m%d%H%M%S%z)
+
+mkdir -p $output_dir
+
+output_dir=${output_dir%/}
+
+targz_file_path=$output_dir/${d}${input_dir_name}.tar.gz
+
+tar czf $targz_file_path -C $in_dir/.. $input_dir_name
+checksum=$(md5sum $targz_file_path | awk '{ print $1 }')
+encr_out_path=$targz_file_path.$encr_key_file_name.$checksum.enc
+
+openssl aes-256-cbc -a -salt -pbkdf2 \
+    -pass file:$encr_key_file_path \
+    -in $targz_file_path \
+    -out $encr_out_path
+
+rm $targz_file_path
+
+num_files_in_output_dir=$(ls -1q $output_dir | wc -l)
+
+if [[ $num_files_in_output_dir -eq 1 ]]; then
+    exit 0
+fi
+
+last_file=$(ls -1 $output_dir | sort | tail -n 1)
+second_last_file=$(ls -1 $output_dir | sort | tail -n 2 | head -n 1)
+
+last_file_checksum=$(echo $last_file | awk -F '.' '{ print $(NF-1) }')
+second_last_file_checksum=$(echo $second_last_file | awk -F '.' '{ print $(NF-1) }')
+
+if [[ $last_file_checksum == $second_last_file_checksum ]]; then
+    rm $output_dir/$last_file
+    echo "Backup not needed, same content"
+else
+    echo "Created backup $encr_out_path"
+fi

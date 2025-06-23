@@ -1,5 +1,5 @@
-# shortcut to this dotfiles path is $ZSH_DOTFILES
-export ZSH_DOTFILES=$HOME/.dotfiles
+# shortcut to this dotfiles path is $ZSH_DOTFILES 
+export ZSH_DOTFILES=$HOME/.dotfiles 
 
 # your project folder that we can `c [tab]` to
 export PROJECTS=~/repos
@@ -11,6 +11,16 @@ if [[ -a ~/.localrc ]]
 then
   source ~/.localrc
 fi
+
+# Stash your private aliases / functions to .localrc.prv
+# Whenever you change that file, run
+# cd $ZSH_DOTFILES; enc_enrypt_file .localrc.prv
+#
+if [[ -a $ZSH_DOTFILES/zsh/.localrc.prv ]]
+then
+  source $ZSH_DOTFILES/zsh/.localrc.prv
+fi
+
 
 if [[ -a $HOME/.cargo/env ]]
 then

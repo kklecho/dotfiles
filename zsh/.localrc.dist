@@ -2,3 +2,6 @@ export GH_USER=
 export ME=kkl
 export BW_SESSION=
 export EDITOR=vim
+export PTH_ENC_KEYFILE_PATH_COMMON="edit_me"
+export PTH_ENC_KEYFILE_PATH_LOCALRC_PRV="edit_me"
+
