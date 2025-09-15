@@ -1,0 +1,19 @@
+#!/bin/bash
+
+crstdinfn() {
+  local profile_block
+  profile_block=$(cat)
+  local profile_name=$(echo "$profile_block" | head -n 1 | sed -E 's/\[(.*)\]/\1/')
+  local credentials_file="$HOME/.aws/credentials"
+
+  if grep -q "\[$profile_name\]" "$credentials_file"; then
+    # Profile exists, replace it
+    sed -i "/\[$profile_name\]/,/^\[.*\|^	*$/c\$profile_block" "$credentials_file"
+  else
+    # Profile does not exist, append it
+    echo -e "\n$profile_block" >> "$credentials_file"
+  fi
+}
+
+crstrdinfn
+
