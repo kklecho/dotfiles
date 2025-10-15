@@ -39,10 +39,6 @@ alias kei="ssh $KEI_SSH_USER@kei"
 
 alias m="ssh m"
 
-alias df='df -h -x squashfs -x tmpfs -x devtmpfs'
-
 alias shortshell='export PS1="$ "'
 alias sts='shortshell'
 alias clwdirname="basename $PWD | clip"
-
-
