@@ -57,3 +57,5 @@ plugins=(git z zsh-autosuggestions zsh-syntax-highlighting)
 # do
 #   source $file
 # done
+#
+export PATH="$HOME/bin:$PATH"
