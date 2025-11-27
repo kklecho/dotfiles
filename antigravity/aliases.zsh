@@ -1,0 +1,2 @@
+alias ag=antigravity
+
