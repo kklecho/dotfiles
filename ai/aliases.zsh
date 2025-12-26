@@ -1,0 +1,2 @@
+alias a="gemini -y"
+
