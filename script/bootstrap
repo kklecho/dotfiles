@@ -156,7 +156,7 @@ link_file () {
 
   if [ "$skip" != "true" ]  # "false" or empty
   then
-    ln -s "$1" "$2"
+    ln -s "$1" "$2" 2> /dev/null
     success "linked $1 to $2"
   fi
 }
