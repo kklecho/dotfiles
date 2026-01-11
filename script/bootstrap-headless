@@ -54,25 +54,6 @@ setup_gitconfig_files () {
   success 'gitconfig_files'
 }
 
-setup_giconfig_values() {
-
-  user ' - What is your github author name?'
-  read -e git_authorname
-  user ' - What is your github author email?'
-  read -e git_authoremail
-  user ' - What is your gpg signing key?'
-  read -e gpg_signing_key
-
-  sed -i.bak \
-    -e "s/name = /name = $git_authorname/g" \
-    -e "s/email = /email = $git_authoremail/g" \
-    -e "s/signingkey = /signingkey = $gpg_signing_key/g" \
-    ~/.gitconfig.local
-
-  rm ~/.gitconfig.local.bak
-  success 'gitconfig_values'
-}
-
 setup_localrc_baseline() {
   ts=$(date +%Y%m%dT%H%M%S)
 
