@@ -27,33 +27,63 @@ fail () {
   exit
 }
 
-setup_gitconfig () {
-  if ! [ -f git/gitconfig.local.symlink ]
+setup_gitconfig_files () {
+  ts=$(date +%Y%m%dT%H%M%S)
+  info 'setup gitconfig'
+
+  if [ -f ~/.gitconfig.local ]
   then
-    info 'setup gitconfig'
-
-    git_credential='cache'
-    if [ "$(uname -s)" == "Darwin" ]
-    then
-      git_credential='osxkeychain'
-    fi
-
-    user ' - What is your github author name?'
-    read -e git_authorname
-    user ' - What is your github author email?'
-    read -e git_authoremail
-
-    sed -e "s/AUTHORNAME/$git_authorname/g" -e "s/AUTHOREMAIL/$git_authoremail/g" -e "s/GIT_CREDENTIAL_HELPER/$git_credential/g" git/gitconfig.local.symlink.example > git/gitconfig.local.symlink
-
-    success 'gitconfig'
+    mv ~/.gitconfig.local ~/.gitconfig.local.bak."${ts}"
   fi
+
+  cp $DOTFILES_ROOT/git/.gitconfig.local.dist $HOME/.gitconfig.local
+
+
+  git_credential='cache'
+  if [ "$(uname -s)" == "Darwin" ]
+  then
+    git_credential='osxkeychain'
+  fi
+
+  sed -i.bak \
+    -e "s/helper = /helper = $git_credential/g" \
+    ~/.gitconfig.local
+
+  rm ~/.gitconfig.local.bak
+
+  success 'gitconfig_files'
+}
+
+setup_giconfig_values() {
+
+  user ' - What is your github author name?'
+  read -e git_authorname
+  user ' - What is your github author email?'
+  read -e git_authoremail
+  user ' - What is your gpg signing key?'
+  read -e gpg_signing_key
+
+  sed -i.bak \
+    -e "s/name = /name = $git_authorname/g" \
+    -e "s/email = /email = $git_authoremail/g" \
+    -e "s/signingkey = /signingkey = $gpg_signing_key/g" \
+    ~/.gitconfig.local
+
+  rm ~/.gitconfig.local.bak
+  success 'gitconfig_values'
 }
 
 setup_localrc_baseline() {
-  if ! [ -f $HOME/.localrc ]
+  ts=$(date +%Y%m%dT%H%M%S)
+
+  if [ -f $HOME/.localrc ]
   then
-    cp $DOTFILES_ROOT/zsh/.localrc.dist $HOME/.localrc
+    mv $HOME/.localrc $HOME/.localrc.bak.${ts}
   fi
+
+  cp $DOTFILES_ROOT/zsh/.localrc.dist $HOME/.localrc
+
+  success 'localrc'
 }
 
 link_file () {
@@ -143,9 +173,10 @@ install_dotfiles () {
   done
 }
 
-setup_gitconfig
+setup_gitconfig_files
 install_dotfiles
 setup_localrc_baseline
+setup_giconfig_values
 
 # If we're on a Mac, let's install and setup homebrew.
 if [ "$(uname -s)" == "Darwin" ]
