@@ -33,7 +33,5 @@
         default = simple
 [init]
 	templatedir =  ~/.git-template
-[user]
-	signingkey = C31FA76A
 [commit]
 	gpgSign = true
