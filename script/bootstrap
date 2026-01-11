@@ -4,7 +4,6 @@
 
 cd "$(dirname "$0")/.."
 DOTFILES_ROOT=$(pwd -P)
-backup_all="true"
 
 set -e
 
