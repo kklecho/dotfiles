@@ -200,3 +200,5 @@ fi
 
 echo ''
 echo '  All installed!'
+
+touch ~/.dotfiles-bootstraped
