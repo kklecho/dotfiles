@@ -137,7 +137,15 @@ link_file () {
 
   if [ "$skip" != "true" ]  # "false" or empty
   then
-    ln -s "$1" "$2" 2> /dev/null
+    # TODO: Why the BACKUP_ALL env does not work here?
+    #### addition
+    if [ -f "$2" ]
+    then
+      mv "$2" "$2".bak
+    fi
+    ### eof addition
+
+    ln -s "$1" "$2"
     success "linked $1 to $2"
   fi
 }
