@@ -149,10 +149,17 @@ function prjhere(){
     export PATH_PROJECT=$PWD 
 }
 
+function fn_prjnow(){
+    echo 'export PATH_PROJECT_NOW="'$PWD'"' >> ~/.localrc;
+    export PATH_PROJECT_NOW=$PWD
+    cd ~/prj
+    rm ./prj/prjnow 2>/dev/null
+    ln -s "$PATH_PROJECT_NOW" ./prjnow
+}
+
 function bm(){ 
     [[ -z $1 ]] && echo "Usage bm <bookmark_code>" && return 1
-
-    echo 'alias g'$1'="cd '$PWD'"' >> ~/.localrc; 
+echo 'alias g'$1'="cd '$PWD'"' >> ~/.localrc; 
     alias g$1="cd $PWD"
 }
 
