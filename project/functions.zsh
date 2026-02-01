@@ -137,6 +137,7 @@ function lg(){
 
 function now(){
     echo "NOW_CLIENT: $NOW_CLIENT"
+    echo "NOW_PROJECT_TIC: $NOW_PROJECT_TIC"
     echo "NOW_PROJECT: $NOW_PROJECT"
     echo "NOW_TASK: $NOW_TASK"
     echo "NOW_TICKET: $NOW_TICKET"
