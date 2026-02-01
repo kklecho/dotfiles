@@ -19,6 +19,18 @@ function nowcli(){
     export NOW_CLIENT=$client 
 }
 
+function nowprjtic(){ 
+    project=$*
+
+    if [ -z "$project" ]; then
+        echo "Project name / epic is required"
+        return 1
+    fi
+
+    echo 'export NOW_PROJECT_TIC="'$project'"' >> ~/.localrc;
+    export NOW_PROJECT_TIC=$project 
+}
+
 function nowprj(){ 
     project=$*
 
