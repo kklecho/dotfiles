@@ -5,4 +5,5 @@
 .scratch
 .vagrant
 .Trash*
+.ssh
 
