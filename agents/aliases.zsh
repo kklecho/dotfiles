@@ -1,3 +1,2 @@
-alias mka="./,mkgemini-andy.sh"
-alias mkb="./,mkgemini-bobby.sh"
+alias agr=fn_agr
 
