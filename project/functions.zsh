@@ -152,9 +152,18 @@ function prjhere(){
 function fn_prjnow(){
     echo 'export PATH_PROJECT_NOW="'$PWD'"' >> ~/.localrc;
     export PATH_PROJECT_NOW=$PWD
+    
     cd ~/prj
-    rm ./prj/prjnow 2>/dev/null
+    rm prjnow 
     ln -s "$PATH_PROJECT_NOW" ./prjnow
+}
+
+function fn_prjprevs() {
+  grep PATH_PROJECT_NOW ~/.localrc
+}
+
+function fn_prjprev() {
+  grep PATH_PROJECT_NOW ~/.localrc | tail -2 | head -1
 }
 
 function bm(){ 
