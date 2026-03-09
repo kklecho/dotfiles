@@ -1,13 +1,23 @@
-function fn_agr() {
+function fn_agr_mini() {
   fn_rebuild_gemini_files
   ( 
     cd ~/prj/prjnow
-  #  rsync -av GEMINI.andy.md a@aiag-mini-kkl:~/.gemini/GEMINI.md
+    rsync -av --copy-links .aiag-profiles/GEMINI-andy.md a@aiag-mini-kkl:~/.gemini/GEMINI.md
+    rsync -av --copy-links .aiag-profiles/GEMINI-bobby.md b@aiag-mini-kkl:~/.gemini/GEMINI.md
+    rsync -av --copy-links .aiag-profiles/GEMINI-andy.md a@aiag-mini-kkl:~/.gemini/AGENTS.md
+    rsync -av --copy-links .aiag-profiles/GEMINI-bobby.md b@aiag-mini-kkl:~/.gemini/AGENTS.md
+  ) 
+}
+
+function fn_agr_std() {
+  fn_rebuild_gemini_files
+  ( 
+    cd ~/prj/prjnow
     rsync -av --copy-links .aiag-profiles/GEMINI-andy.md a@aiag-std-kkl:~/.gemini/GEMINI.md
     rsync -av --copy-links .aiag-profiles/GEMINI-bobby.md b@aiag-std-kkl:~/.gemini/GEMINI.md
+    rsync -av --copy-links .aiag-profiles/GEMINI-andy.md a@aiag-std-kkl:~/.gemini/AGENTS.md
+    rsync -av --copy-links .aiag-profiles/GEMINI-bobby.md b@aiag-std-kkl:~/.gemini/AGENTS.md
   ) 
-
-
 }
 
 function fn_rebuild_gemini_files() {
