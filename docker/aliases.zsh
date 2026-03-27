@@ -2,6 +2,8 @@ alias d='docker $*'
 alias dc='docker compose $*'
 
 alias dcu="docker compose up -d"
+alias dccu="docker-compose up -d"
+alias dccs="docker compose stop"
 alias dcs="docker compose stop"
 alias dcb="docker compose build"
 alias dce='docker compose exec'
