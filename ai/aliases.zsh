@@ -1,2 +1,2 @@
-alias a="gemini -y"
+alias a="mistral -y"
 
