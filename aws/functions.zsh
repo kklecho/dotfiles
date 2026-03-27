@@ -12,7 +12,6 @@ function labiallow() {
 
 function ec2-list-amis-ubuntu() {
 
-    # --filters=Name=name,Values=ubuntu*22.04*amd*202402*
     aws ec2 describe-images \
         --region eu-west-1 \
         --filters Name=name,Values=ubuntu \
@@ -53,4 +52,49 @@ function ec2-create-dev-instance() {
         'ResourceType=instance,Tags=[{Key=Name,Value=devl}]' \
         'ResourceType=volume,Tags=[{Key=Name,Value=devl-disk}]'
 
+}
+
+fn_aws_get_ec2_instance_id() {
+    local instance_name="$1"
+    aws ec2 describe-instances \
+        --filters "Name=tag:Name,Values=$instance_name" \
+        --query "Reservations[].Instances[].InstanceId" \
+        --output text
+}
+
+fn_aws_get_ec2_public_ip() {
+    local instance_name="$1"
+    aws ec2 describe-instances \
+        --filters "Name=tag:Name,Values=$instance_name" \
+        --query "Reservations[].Instances[].PublicIpAddress" \
+        --output text
+}
+
+fn_aws_add_ec2_to_hosts() {
+    local instance_name="$1"
+    local host_name="$2"
+    
+    local instance_id=$(fn_aws_get_ec2_instance_id "$instance_name")
+    if [[ -z "$instance_id" ]]; then
+        echo "Error: Instance with name '$instance_name' not found."
+        return 1
+    fi
+    echo "Instance ID: $instance_id"
+    
+    (aws ec2 start-instances --instance-ids "$instance_id") &
+
+    echo "Waiting for instance to be in 'running' state..."
+    aws ec2 wait instance-running --instance-ids "$instance_id"
+    echo "Instance is now running."
+    
+    local public_ip=$(fn_aws_get_ec2_public_ip "$instance_name")
+    if [[ -z "$public_ip" ]]; then
+        echo "Error: Public IP for instance '$instance_name' not found."
+        return 1
+    fi
+    echo "Public IP: $public_ip"
+    
+    echo ""
+    echo "Now run:"
+    echo 'sudo sed -i "s/^.*'"${host_name}"'\\s*$/'"${public_ip}"'\    '"${host_name}"'/" /etc/hosts'
 }
