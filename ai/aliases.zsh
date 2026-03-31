@@ -1,5 +1,6 @@
-alias a="mistral -y"
-
+alias a="vibe -y"
+alias viber="vibe --continue -y"
+alias vibey="vibe -y"
 
 ## caiag
 alias caiaga="ssh a@$host_caiagm"
