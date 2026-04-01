@@ -42,6 +42,6 @@ function fn_rebuild_agent_files() {
 
   echo "" >> AGENTS.md
   echo "## Task" >> AGENTS.md
-  head -1 "todo-queue-${agent}.txt" >> AGENTS.md
+  head -1 ".ai/todo-queue-${agent}.txt" >> AGENTS.md
  ) 
 }
