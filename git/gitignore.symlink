@@ -6,4 +6,5 @@
 .vagrant
 .Trash*
 .ssh
+AGENTS.md
 
