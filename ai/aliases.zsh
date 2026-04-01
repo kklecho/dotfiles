@@ -22,3 +22,6 @@ alias aiagb-std="(ssh b@$host_aiag_std)"
 
 alias aiagupm="(cd $PTH_AIAG_MINI; vagrant up)"
 alias aiagups="(cd $PTH_AIAG_STD; vagrant up)"
+
+## agents files
+alias agr-agent-rebuild=fn_rebuild_agent_files
