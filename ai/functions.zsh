@@ -36,7 +36,6 @@ function fn_aiag_ip_pull() {
 function fn_rebuild_agent_files() {
   (
   agent=$1
-  cd ~/prj/prjnow/
   rm AGENTS.md 2>/dev/null
   cat ".ai/agent-profile-${agent}.md" >> AGENTS.md
   cat .ai/agent-project.md >> AGENTS.md
