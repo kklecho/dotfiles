@@ -5,8 +5,8 @@ function fn_aiag_ip_push() {
     ssh kshishkin@kei 'rm .aiagsrc 2>/dev/null'
     ssh kshishkin@kei "echo ${ip_mini} aiag-mini-kkl-cloud >> .aiags"
     ssh kshishkin@kei "echo ${ip_std} aiag-std-kkl-cloud >> .aiags"
-    ssh kshishkin@kei "echo export host_caiagm=${ip_mini} >> .aiagsrc"
-    ssh kshishkin@kei "echo export host_caiags=${ip_std} >> .aiagsrc"
+    ssh kshishkin@kei "echo export HOST_CAIAGM=${ip_mini} >> .aiagsrc"
+    ssh kshishkin@kei "echo export HOST_CAIAGS=${ip_std} >> .aiagsrc"
 }
 
 function fn_aiag_ip_pull() {
