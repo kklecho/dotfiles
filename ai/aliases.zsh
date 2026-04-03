@@ -9,8 +9,8 @@ alias caiaga-std="ssh a@$host_caiags"
 alias caiagb="ssh b@$host_caiagm"
 alias caiagb-std="ssh b@$host_caiags"
 
-alias caiagupm="fn_aws_add_ec2_to_hosts aiag-mini-kkl-cloud aiag-mini-kkl-cloud"
-alias caiagups="fn_aws_add_ec2_to_hosts aiag-std-kkl-cloud aiag-std-kkl-cloud"
+alias caiagupm="fn_aws_add_ec2_to_hosts aiag-mini-kkl-cloud aiag-mini-kkl-cloud; echo 'now caiagip-push'"
+alias caiagups="fn_aws_add_ec2_to_hosts aiag-std-kkl-cloud aiag-std-kkl-cloud; echo 'now caiagip-push'"
 alias caiagip-push="fn_aiag_ip_push"
 alias caiagip-pull="fn_aiag_ip_pull"
 
