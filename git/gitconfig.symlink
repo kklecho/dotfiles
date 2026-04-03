@@ -35,3 +35,7 @@
 	templatedir =  ~/.git-template
 [commit]
 	gpgSign = true
+[diff]
+	tool = vscode
+[difftool "vscode"]
+	cmd = code --wait --diff $LOCAL $REMOTE
