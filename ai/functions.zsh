@@ -11,7 +11,7 @@ function fn_aiag_ip_push() {
 
 function fn_aiag_ip_pull() {
     scp kshishkin@${HOST_KEI:-kei}:~/.aiags ~/
-    scp kshishkin@${HOST_KEY:-kei}:~/.aiagsrc ~/
+    scp kshishkin@${HOST_KEI:-kei}:~/.aiagsrc ~/
     cat ~/.aiagsrc >> ~/.localrc
 }
 
