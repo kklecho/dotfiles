@@ -2,7 +2,6 @@ alias a='vibe'
 alias viber='vibe -c'
 alias vibey='vibe'
 alias vp='vibe -p'
-alias brvw=''
 
 alias caiaga='ssh a@$HOST_CAIAGM'
 alias caiaga-std='ssh a@$HOST_CAIAGS'
