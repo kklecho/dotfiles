@@ -1,9 +1,9 @@
 alias a='vibe'
 alias viber='vibe -c'
-alias vibey='vibe'
-alias vp='vibe -p'
-alias vigo="vibe -p go"
-alias virv="vibe -p 'Review the changes'"
+alias agr='source .ai/.env; agr-agent-rebuild'
+alias vip='agr; vibe -p'
+alias vigo='agr; vibe -p go'
+alias vifb='agr; vibe -p fb'
 
 alias caiaga='ssh a@$HOST_CAIAGM'
 alias caiaga-std='ssh a@$HOST_CAIAGS'
