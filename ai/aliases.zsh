@@ -18,8 +18,8 @@ alias aiagupm='(cd $PTH_AIAG_MINI; vagrant up)'
 alias aiagups='(cd $PTH_AIAG_STD; vagrant up)'
 
 
-alias caiagupm='fn_aws_add_ec2_to_hosts aiag-mini-kkl-cloud aiag-mini-kkl-cloud; echo "now:\ncaiagip-push; caiagip-pull"'
-alias caiagups='fn_aws_add_ec2_to_hosts aiag-std-kkl-cloud aiag-std-kkl-cloud; echo "now:\ncaiagip-push; caiagip-pull"'
+alias caiagupm='fn_aws_add_ec2_to_hosts aiag-mini-kkl-cloud aiag-mini-kkl-cloud; echo "now:\ncaiagip-push; caiagip-pull; srclocalrc"'
+alias caiagups='fn_aws_add_ec2_to_hosts aiag-std-kkl-cloud aiag-std-kkl-cloud; echo "now:\ncaiagip-push; caiagip-pull; srclocalrc"'
 alias caiagip-push='fn_aiag_ip_push'
 alias caiagip-pull='fn_aiag_ip_pull'
 
