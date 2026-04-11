@@ -23,10 +23,11 @@ def main():
         base_path / "product.md",
         base_path / "stack.md",
         base_path / "themes" / f"thm-{args.theme_key}.md",
-        base_path / "initiatives" / f"intv-{args.initiative_key}" / f"intv-{args.initiative_key}.md",
-        base_path / "initiatives" / f"intv-{args.initiative_key}" / "epics" / f"ep-{args.epic_key}" / f"ep-{args.epic_key}.md",
-        base_path / "initiatives" / f"intv-{args.initiative_key}" / "epics" / f"ep-{args.epic_key}" / "tasks" / f"tsk-{args.task_key}.md",
-        base_path.parent / f"agent-profile-{args.agent_key}.md"
+        base_path / "initiatives" / f"{args.initiative_key}" / f"intv-{args.initiative_key}.md",
+        base_path / "initiatives" / f"{args.initiative_key}" / "epics" / f"{args.epic_key}" / f"ep-{args.initiative_key}-{args.epic_key}.md",
+        base_path / "initiatives" / f"{args.initiative_key}" / "epics" / f"{args.epic_key}" / "tasks" / f"tsk-{args.task_key}.md",
+        base_path / f"agent-profile-{args.agent_key}.md",
+        base_path / "development-instructions.md",
     ]
     
     contents = []
@@ -43,4 +44,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()%
+    main()

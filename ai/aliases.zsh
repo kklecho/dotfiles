@@ -22,6 +22,3 @@ alias caiagupm='fn_aws_add_ec2_to_hosts aiag-mini-kkl-cloud aiag-mini-kkl-cloud;
 alias caiagups='fn_aws_add_ec2_to_hosts aiag-std-kkl-cloud aiag-std-kkl-cloud; echo "now:\ncaiagip-push; caiagip-pull; srclocalrc"'
 alias caiagip-push='fn_aiag_ip_push'
 alias caiagip-pull='fn_aiag_ip_pull'
-
-## agents files
-alias agr-agent-rebuild=fn_rebuild_agent_files
