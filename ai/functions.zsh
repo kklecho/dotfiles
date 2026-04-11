@@ -32,16 +32,3 @@ function fn_aiag_ip_pull() {
 #     rsync -av --copy-links .aiag-profiles/agents-bobby.md b@aiag-std-kkl:~/repos/hopcar/AGENTS.md
 #   ) 
 # }
-
-function fn_rebuild_agent_files() {
-  (
-  agent=$1
-  rm AGENTS.md 2>/dev/null
-  cat ".ai/agent-profile-${agent}.md" >> AGENTS.md
-  cat .ai/agent-project.md >> AGENTS.md
-
-  echo "" >> AGENTS.md
-  echo "## Task" >> AGENTS.md
-  head -1 ".ai/todo-queue-${agent}.txt" >> AGENTS.md
- ) 
-}

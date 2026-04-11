@@ -1,0 +1,46 @@
+#!/usr/bin/env python3
+
+import argparse
+from pathlib import Path
+import sys
+import os
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--agent_key", type=str, default=os.getenv("AGENT_KEY"))
+    parser.add_argument("--theme_key", type=str, default=os.getenv("THEME_KEY"))
+    parser.add_argument("--initiative_key", type=str, default=os.getenv("INITIATIVE_KEY"))
+    parser.add_argument("--epic_key", type=str, default=os.getenv("EPIC_KEY"))
+    parser.add_argument("--task_key", type=str, default=os.getenv("TASK_KEY"))
+    parser.add_argument("--base_path", type=str, default=os.getenv("BASE_PATH"))
+    args = parser.parse_args()
+    
+    base_path = Path(args.base_path)
+    output_file = Path("AGENTS.md")
+    
+    sources = [
+        base_path / "product.md",
+        base_path / "stack.md",
+        base_path / "themes" / f"thm-{args.theme_key}.md",
+        base_path / "initiatives" / f"intv-{args.initiative_key}" / f"intv-{args.initiative_key}.md",
+        base_path / "initiatives" / f"intv-{args.initiative_key}" / "epics" / f"ep-{args.epic_key}" / f"ep-{args.epic_key}.md",
+        base_path / "initiatives" / f"intv-{args.initiative_key}" / "epics" / f"ep-{args.epic_key}" / "tasks" / f"tsk-{args.task_key}.md",
+        base_path.parent / f"agent-profile-{args.agent_key}.md"
+    ]
+    
+    contents = []
+    for source in sources:
+        if source.exists():
+            try:
+                contents.append(source.read_text())
+            except Exception as e:
+                print(f"Error processing {source}: {e}", file=sys.stderr)
+        else:
+            print(f"Warning: {source} does not exist", file=sys.stderr)
+    
+    output_file.write_text("\n\n".join(contents))
+
+
+if __name__ == "__main__":
+    main()%
