@@ -17,7 +17,7 @@ def main():
     args = parser.parse_args()
     
     base_path = Path(args.base_path)
-    output_file = Path("AGENTS.md")
+    output_files = [Path("AGENTS.md"), Path("GEMINI.md"), Path("CLAUDE.md")]
     
     contents = []
     
@@ -47,8 +47,9 @@ def main():
         print("No task key provided. Please enter the task content (Ctrl-D to finish):")
         contents.append(sys.stdin.read())
     
-    output_file.write_text("\n\n".join(contents))
-
+    
+    for output_file in output_files:
+        output_file.write_text("\n\n".join(contents))
 
 if __name__ == "__main__":
     main()
