@@ -32,3 +32,16 @@ function fn_aiag_ip_pull() {
 #     rsync -av --copy-links .aiag-profiles/agents-bobby.md b@aiag-std-kkl:~/repos/hopcar/AGENTS.md
 #   ) 
 # }
+
+
+function vibe-apply-feedback() {
+  hsh=$(git rev-parse --short HEAD)
+  for f in $(ls /tmp/reviewer-feedback-*${hsh}/*.txt)
+  do
+    echo ""
+    vibe -p "Apply review feedback provided in @$f"
+    git add .
+    git commit -m "Apply review feedback"
+  done
+}
+
