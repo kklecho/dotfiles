@@ -36,7 +36,7 @@ function fn_aiag_ip_pull() {
 
 function vibe-apply-feedback() {
   hsh=$(git rev-parse --short HEAD)
-  for f in $(ls /tmp/reviewer-feedback-*${hsh}/*.txt)
+  for f in $(ls /tmp/reviewer-feedback-*${hsh}*/*.txt)
   do
     echo ""
     vibe -p "Apply review feedback provided in @$f"
