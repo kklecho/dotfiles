@@ -38,7 +38,7 @@ def main():
             print(f"Warning: {source} does not exist", file=sys.stderr)
 
     if args.task_key:
-        task_file = base_path / "initiatives" / f"{args.initiative_key}" / "epics" / f"{args.epic_key}" / "tasks" / f"tsk-{args.task_key}.md"
+        task_file = base_path / "initiatives" / f"{args.initiative_key}" / "epics" / f"{args.epic_key}" / "tasks" / f"{args.task_key}.md"
         if task_file.exists():
             contents.append(task_file.read_text())
         else:
