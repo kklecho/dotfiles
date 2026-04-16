@@ -22,13 +22,13 @@ def main():
     contents = []
     
     base_files = [
-        base_path / "product.md",
+        base_path / f"agent-profile-{args.agent_key}.md",
         base_path / "stack.md",
+        base_path / "development-instructions.md",
+        base_path / "product.md",
         base_path / "themes" / f"thm-{args.theme_key}.md",
         base_path / "initiatives" / f"{args.initiative_key}" / f"intv-{args.initiative_key}.md",
         base_path / "initiatives" / f"{args.initiative_key}" / "epics" / f"{args.epic_key}" / f"ep-{args.initiative_key}-{args.epic_key}.md",
-        base_path / f"agent-profile-{args.agent_key}.md",
-        base_path / "development-instructions.md",
     ]
     
     for source in base_files:
