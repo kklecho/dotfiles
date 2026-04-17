@@ -2,6 +2,7 @@ alias a='vibe'
 alias viber='vibe -c'
 alias agr='source .ai/.env; agr-agent-rebuild'
 alias vip='vibe -p'
+alias vipc='vibe -c -p'
 alias vigo='vibe -p go'
 alias vifb='vibe -p fb'
 
