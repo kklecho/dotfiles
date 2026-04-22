@@ -40,10 +40,14 @@ def main():
     if args.task_key:
         task_file = base_path / "initiatives" / f"{args.initiative_key}" / "epics" / f"{args.epic_key}" / "tasks" / f"{args.task_key}.md"
         if task_file.exists():
-            contents.append(task_file.read_text())
+            content=task_file.read_text()
+            contents.append(content)
+            print(f"INFO: Using {task_file}:")
+            print(content)            
     elif Path('.tsk.md').exists():
-        print("INFO: Using .task.md")
-        contents.append(Path('.tsk.md').read_text())
+        content=Path('.tsk.md').read_text()
+        print("INFO: Using .task.md:")
+        print(content)
     else:
         print("No task key provided. Please enter the task content (Ctrl-D to finish):")
         contents.append(sys.stdin.read())
