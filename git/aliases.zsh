@@ -23,7 +23,8 @@ alias gs='git status -sb' # upgrade your git if -sb breaks for you. it's fun.
 alias gbmods="git diff --name-only $(git merge-base main HEAD)"
 alias gac='git add -A && git commit -m'
 alias ge='git-edit-new'
-
+alias gcfm='git checkout main -- ' # give it a file path to bring that file from main
 # gitcommitfileschanged <commit_hash>
 alias gitcommitfileschanged='git diff-tree --no-commit-id --name-only -r '
 export GPG_TTY=$(tty)
+
