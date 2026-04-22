@@ -48,6 +48,7 @@ def main():
         content=Path('.tsk.md').read_text()
         print("INFO: Using .task.md:")
         print(content)
+        contents.append(content)
     else:
         print("No task key provided. Please enter the task content (Ctrl-D to finish):")
         contents.append(sys.stdin.read())
