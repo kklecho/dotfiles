@@ -59,3 +59,8 @@ plugins=(git z zsh-autosuggestions zsh-syntax-highlighting)
 # done
 #
 export PATH="$HOME/bin:$PATH"
+
+if [[ $- =~ i ]] && [[ -z "$TMUX" ]] && [[ -n "$SSH_TTY" ]]; then
+  tmux attach-session -t ssh_tmux || tmux new-session -s ssh_tmux
+fi
+
