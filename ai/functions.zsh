@@ -37,7 +37,7 @@ function fn_aiag_ip_pull() {
 function vibe-apply-feedback() {
   cur_hsh=$(git rev-parse --short HEAD)
   hsh=${1:-"$cur_hsh"}
-  cp /tmp/reviewer-feedback-*${hsh}* ~/
+  cp -r /tmp/reviewer-feedback-*${hsh}* ~/
 
   for f in $(ls ~/reviewer-feedback-*${hsh}*/*.txt | head -1)
   do
