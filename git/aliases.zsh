@@ -27,5 +27,6 @@ alias gcfm='git checkout main -- ' # give it a file path to bring that file from
 alias gdfm='git diff main..$(git symbolic-ref --short HEAD) ' # show diff for the file against main
 # gitcommitfileschanged <commit_hash>
 alias gitcommitfileschanged='git diff-tree --no-commit-id --name-only -r '
+alias gvd='git difftool --tool vimdiff'
 export GPG_TTY=$(tty)
 
