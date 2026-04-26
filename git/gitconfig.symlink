@@ -1,6 +1,4 @@
 # Local/private config goes in the include
-[include]
-        path = ~/.gitconfig.local
 [hub]
         protocol = https
 [alias]
@@ -39,3 +37,6 @@
 	tool = vscode
 [difftool "vscode"]
 	cmd = code --wait --diff $LOCAL $REMOTE
+[include]
+        path = ~/.gitconfig.local
+
