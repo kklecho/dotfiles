@@ -47,7 +47,7 @@ function vibe-apply-feedback() {
   for f in $(ls ~/reviewer-feedback-*${hsh}*/*.txt | head -1)
   do
     vibe -p "Apply review feedback provided in @$f"
-    mv $f ./feedback.txt
+    mv $f ./.feedback.txt
   done
 }
 
