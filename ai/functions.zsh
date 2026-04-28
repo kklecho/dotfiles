@@ -43,7 +43,7 @@ function fcl-feedback-copy-to-local(){
 function vibe-apply-feedback() {
   cur_hsh=$(git rev-parse --short HEAD)
   hsh=${1:-"$cur_hsh"}
-  folder=$(ls ~/reviewer-feedback-*${hsh}* | tail -1)
+  folder=$(ls ~/ | grep 'reviewer-feedback-' | grep "${hsh}" | tail -1)
   if [[ -d "$folder" && -z "$(ls -A "$folder")" ]]; then
     echo "Folder is empty"
     exit 1
