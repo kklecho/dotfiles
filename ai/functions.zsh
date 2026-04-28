@@ -43,11 +43,15 @@ function fcl-feedback-copy-to-local(){
 function vibe-apply-feedback() {
   cur_hsh=$(git rev-parse --short HEAD)
   hsh=${1:-"$cur_hsh"}
+  folder=$(ls ~/reviewer-feedback-*${hsh}* | tail -1)
+  if [[ -d "$folder" && -z "$(ls -A "$folder")" ]]; then
+    echo "Folder is empty"
+    exit 1
+  fi
 
-  for f in $(ls ~/reviewer-feedback-*${hsh}*/*.txt | head -1)
-  do
-    mv $f ./.feedback.txt
-    vibe -p "Apply review feedback provided in @./.feedback.txt"
-  done
+  mv $(ls $folder/*-feedback.txt | head -1) ~/.feedback.txt
+  mv $(ls $folder/*-commit.txt | head -1) ~/.commit.txt
+
+  vibe -p "Apply review feedback provided in @./.feedback.txt"
 }
 
