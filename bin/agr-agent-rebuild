@@ -49,14 +49,17 @@ def main():
     elif Path('.tsk.md').exists():
         content=Path('.tsk.md').read_text()
         print("INFO: Using .task.md:")
-        print(content)
         contents.append(content)
     else:
         print("No task key provided. Please enter the task content (Ctrl-D to finish):")
         contents.append(sys.stdin.read())
     
+    output="\n".join(contents)
     for output_file in output_files:
-        output_file.write_text("\n".join(contents))
+        output_file.write_text(output)
+
+    print(output)
 
 if __name__ == "__main__":
     main()
+
