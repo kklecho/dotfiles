@@ -9,6 +9,8 @@ import os
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--agent_key", type=str, default=os.getenv("AGENT_KEY"))
+    parser.add_argument("--dev_instructions_key", type=str, default=os.getenv("DEV_INSTRUCTIONS_KEY"))
+    parser.add_argument("--stack_key", type=str, default=os.getenv("STACK_KEY"))
     parser.add_argument("--theme_key", type=str, default=os.getenv("THEME_KEY"))
     parser.add_argument("--initiative_key", type=str, default=os.getenv("INITIATIVE_KEY"))
     parser.add_argument("--epic_key", type=str, default=os.getenv("EPIC_KEY"))
@@ -23,8 +25,8 @@ def main():
     
     base_files = [
         base_path / f"agent-profile-{args.agent_key}.md",
-        base_path / "stack.md",
-        base_path / "development-instructions.md",
+        base_path / f"{args.stack_key}.md",
+        base_path / f"{args.dev_instructions_key}.md",
         base_path / "product.md",
         base_path / "themes" / f"thm-{args.theme_key}.md",
         base_path / "initiatives" / f"{args.initiative_key}" / f"intv-{args.initiative_key}.md",
