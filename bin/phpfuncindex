@@ -1,0 +1,229 @@
+#!/usr/bin/env python3
+"""Index PHP function/method definitions to a greppable CSV (name,path,start,end).
+
+Usage:
+    python php_func_index.py /path/to/codebase [-o out.csv]
+    grep '^myFunc,' out.csv
+"""
+
+import argparse
+import bisect
+import csv
+import os
+import re
+import sys
+from pathlib import Path
+
+FUNCTION_RE = re.compile(
+    r'\bfunction\s+&?([a-zA-Z_][a-zA-Z0-9_]*)\s*\(',
+    re.IGNORECASE,
+)
+
+
+def _skip_quoted(s: str, i: int, quote: str) -> int:
+    i += 1
+    n = len(s)
+    while i < n:
+        c = s[i]
+        if c == '\\' and i + 1 < n:
+            i += 2
+            continue
+        if c == quote:
+            return i + 1
+        i += 1
+    return n
+
+
+def _skip_line_comment(s: str, i: int) -> int:
+    n = len(s)
+    while i < n and s[i] != '\n':
+        i += 1
+    return i
+
+
+def _skip_block_comment(s: str, i: int) -> int:
+    i += 2
+    n = len(s)
+    while i + 1 < n:
+        if s[i] == '*' and s[i + 1] == '/':
+            return i + 2
+        i += 1
+    return n
+
+
+def _skip_heredoc(s: str, i: int) -> int:
+    n = len(s)
+    j = i + 3
+    quote = None
+    if j < n and s[j] in ("'", '"'):
+        quote = s[j]
+        j += 1
+    label_start = j
+    while j < n and (s[j].isalnum() or s[j] == '_'):
+        j += 1
+    label = s[label_start:j]
+    if not label:
+        return i + 3
+    if quote and j < n and s[j] == quote:
+        j += 1
+    while j < n and s[j] != '\n':
+        j += 1
+    while j < n:
+        if s[j] != '\n':
+            j += 1
+            continue
+        j += 1
+        k = j
+        while k < n and s[k] in ' \t':
+            k += 1
+        if s[k:k + len(label)] == label:
+            end = k + len(label)
+            if end >= n or not (s[end].isalnum() or s[end] == '_'):
+                return end
+    return n
+
+
+def _skip_opaque(s: str, i: int):
+    """If position i starts a string/comment/heredoc, return position past it; else None."""
+    if i >= len(s):
+        return None
+    c = s[i]
+    if c == "'" or c == '"':
+        return _skip_quoted(s, i, c)
+    if c == '/' and i + 1 < len(s):
+        if s[i + 1] == '/':
+            return _skip_line_comment(s, i)
+        if s[i + 1] == '*':
+            return _skip_block_comment(s, i)
+    if c == '#' and not (i + 1 < len(s) and s[i + 1] == '['):
+        return _skip_line_comment(s, i)
+    if c == '<' and s.startswith('<<<', i):
+        return _skip_heredoc(s, i)
+    return None
+
+
+def _is_word_char(c: str) -> bool:
+    return c.isalnum() or c == '_'
+
+
+def scan_functions(content: str):
+    """Yield (name, start_line, end_line) for every named function in content."""
+    n = len(content)
+    line_starts = [0]
+    for idx, ch in enumerate(content):
+        if ch == '\n':
+            line_starts.append(idx + 1)
+
+    def line_of(pos: int) -> int:
+        return bisect.bisect_right(line_starts, pos)
+
+    i = 0
+    while i < n:
+        nxt = _skip_opaque(content, i)
+        if nxt is not None:
+            i = nxt
+            continue
+
+        if content[i] in 'fF' and content[i:i + 8].lower() == 'function':
+            before_ok = i == 0 or not _is_word_char(content[i - 1])
+            after = i + 8
+            after_ok = after >= n or not _is_word_char(content[after])
+            if before_ok and after_ok:
+                m = FUNCTION_RE.match(content, i)
+                if m:
+                    name = m.group(1)
+                    start_line = line_of(i)
+                    j = m.end()
+                    depth = 1
+                    while j < n and depth > 0:
+                        nxt = _skip_opaque(content, j)
+                        if nxt is not None:
+                            j = nxt
+                            continue
+                        c = content[j]
+                        if c == '(':
+                            depth += 1
+                        elif c == ')':
+                            depth -= 1
+                        j += 1
+                    while j < n and content[j] not in ';{':
+                        nxt = _skip_opaque(content, j)
+                        j = nxt if nxt is not None else j + 1
+                    if j >= n or content[j] == ';':
+                        end_line = line_of(min(j, n - 1)) if n else start_line
+                        yield name, start_line, end_line
+                        i = j + 1
+                        continue
+                    j += 1
+                    depth = 1
+                    while j < n and depth > 0:
+                        nxt = _skip_opaque(content, j)
+                        if nxt is not None:
+                            j = nxt
+                            continue
+                        c = content[j]
+                        if c == '{':
+                            depth += 1
+                        elif c == '}':
+                            depth -= 1
+                        j += 1
+                    yield name, start_line, line_of(max(j - 1, 0))
+                    i = j
+                    continue
+        i += 1
+
+
+def iter_php_files(root: Path, exclude: set):
+    for dirpath, dirnames, files in os.walk(root):
+        dirnames[:] = [d for d in dirnames if d not in exclude]
+        for name in files:
+            if name.endswith('.php'):
+                yield Path(dirpath) / name
+
+
+def index(root: Path, writer, exclude: set) -> int:
+    count = 0
+    for php in iter_php_files(root, exclude):
+        try:
+            content = php.read_text(encoding='utf-8', errors='replace')
+        except OSError:
+            continue
+        rel = php.relative_to(root).as_posix()
+        for name, start, end in scan_functions(content):
+            writer.writerow([name, rel, start, end])
+            count += 1
+    return count
+
+
+def main() -> None:
+    p = argparse.ArgumentParser(
+        description='Index PHP function/method definitions to CSV (name,path,start,end) for grep.'
+    )
+    p.add_argument('path', help='Codebase root to scan.')
+    p.add_argument('-o', '--output', help='Output CSV file (default: stdout).')
+    p.add_argument(
+        '-e', '--exclude',
+        action='append',
+        default=[],
+        metavar='DIR',
+        help='Directory name to skip (repeatable). e.g. -e vendor -e node_modules',
+    )
+    args = p.parse_args()
+
+    root = Path(args.path).resolve()
+    if not root.exists():
+        sys.exit(f'path does not exist: {root}')
+
+    out = open(args.output, 'w', newline='', encoding='utf-8') if args.output else sys.stdout
+    try:
+        writer = csv.writer(out)
+        writer.writerow(['name', 'path', 'start', 'end'])
+        n = index(root, writer, set(args.exclude))
+    finally:
+        if args.output:
+            out.close()
+            print(f'indexed {n} definitions to {args.output}', file=sys.stderr)
+
+
+if __name__ == '__main__':
+    main()
