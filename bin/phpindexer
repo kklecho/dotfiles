@@ -1,0 +1,645 @@
+#!/usr/bin/env python3
+"""
+PHP Codebase Indexer
+
+Recursively scans a directory and builds an index of PHP code elements:
+- Namespaces
+- Classes (with parent, interfaces, traits)
+- Interfaces
+- Traits
+- Functions (global and methods)
+- Constants
+- File metadata
+
+Usage:
+    python php_indexer.py /path/to/php/codebase [--output output.json]
+    python php_indexer.py /path/to/php/codebase --format csv --output index.csv
+"""
+
+import os
+import re
+import sys
+import json
+import csv
+import argparse
+from pathlib import Path
+from dataclasses import dataclass, field, asdict
+from typing import Dict, List, Optional, Set, Tuple
+from collections import defaultdict
+
+try:
+    import yaml
+    HAS_YAML = True
+except ImportError:
+    HAS_YAML = False
+
+
+@dataclass
+class Position:
+    """Source code position."""
+    line: int
+    column: int
+
+
+@dataclass
+class Location:
+    """File location of a code element."""
+    file: str
+    start: Position
+    end: Position
+
+
+@dataclass
+class FunctionInfo:
+    """Information about a function or method."""
+    name: str
+    parameters: List[str] = field(default_factory=list)
+    return_type: Optional[str] = None
+    is_static: bool = False
+    is_public: bool = True
+    is_private: bool = False
+    is_protected: bool = False
+    location: Optional[Location] = None
+    docblock: Optional[str] = None
+
+
+@dataclass
+class ClassInfo:
+    """Information about a class, interface, or trait."""
+    name: str
+    type: str  # 'class', 'interface', 'trait', 'enum'
+    namespace: Optional[str] = None
+    parent: Optional[str] = None
+    interfaces: List[str] = field(default_factory=list)
+    traits: List[str] = field(default_factory=list)
+    is_abstract: bool = False
+    is_final: bool = False
+    methods: Dict[str, FunctionInfo] = field(default_factory=dict)
+    properties: Dict[str, str] = field(default_factory=dict)  # name -> type
+    constants: Dict[str, str] = field(default_factory=dict)  # name -> value
+    location: Optional[Location] = None
+    docblock: Optional[str] = None
+
+
+@dataclass
+class FileIndex:
+    """Index information for a single PHP file."""
+    path: str
+    namespace: Optional[str] = None
+    classes: Dict[str, ClassInfo] = field(default_factory=dict)
+    functions: Dict[str, FunctionInfo] = field(default_factory=dict)
+    constants: Dict[str, str] = field(default_factory=dict)
+    uses: Dict[str, str] = field(default_factory=dict)  # alias -> FQCN
+    requires: List[str] = field(default_factory=list)
+    includes: List[str] = field(default_factory=list)
+    line_count: int = 0
+    size: int = 0
+
+
+@dataclass
+class CodebaseIndex:
+    """Complete index of a PHP codebase."""
+    root_path: str
+    files: Dict[str, FileIndex] = field(default_factory=dict)
+    classes: Dict[str, ClassInfo] = field(default_factory=dict)  # FQCN -> ClassInfo
+    functions: Dict[str, FunctionInfo] = field(default_factory=dict)  # FQCN -> FunctionInfo
+    namespaces: Dict[str, Dict] = field(default_factory=dict)  # namespace -> {classes, functions, constants}
+    dependencies: Dict[str, Set[str]] = field(default_factory=dict)  # FQCN -> set of FQCNs it depends on
+
+
+class PHPIndexer:
+    """Indexer for PHP codebases."""
+
+    # Patterns for parsing PHP constructs
+    NAMESPACE_PATTERN = re.compile(
+        r'namespace\s+([a-zA-Z_][a-zA-Z0-9_\\]*)\s*;',
+        re.IGNORECASE
+    )
+
+    USE_PATTERN = re.compile(
+        r'use\s+(?:const\s+|function\s+)?([a-zA-Z_][a-zA-Z0-9_\\]*)(?:\s+as\s+([a-zA-Z_][a-zA-Z0-9_]*))?\s*;',
+        re.IGNORECASE
+    )
+
+    REQUIRE_PATTERN = re.compile(
+        r'(?:require|include)(?:_once)?\s+["\']([^"\']+)["\']\s*;',
+        re.IGNORECASE
+    )
+
+    CLASS_PATTERN = re.compile(
+        r'(?:(?:abstract\s+|final\s+)?class|interface|trait|enum)\s+([a-zA-Z_][a-zA-Z0-9_]*)'
+        r'(?:\s*extends\s+([a-zA-Z_][a-zA-Z0-9_\\]*))?'
+        r'(?:\s*implements\s+([a-zA-Z_][a-zA-Z0-9_\\]*\s*(?:,\s*[a-zA-Z_][a-zA-Z0-9_\\]*)*))?'
+        r'(?:\s*uses\s+([a-zA-Z_][a-zA-Z0-9_\\]*\s*(?:,\s*[a-zA-Z_][a-zA-Z0-9_\\]*)*))?',
+        re.IGNORECASE
+    )
+
+    FUNCTION_PATTERN = re.compile(
+        r'(?:(?:public|private|protected|static)\s+)*function\s+(&?[a-zA-Z_][a-zA-Z0-9_]*)\s*\(([^)]*)\)'
+        r'(?:\s*:\s*([a-zA-Z_][a-zA-Z0-9_\\]*\s*(?:\|\s*[a-zA-Z_][a-zA-Z0-9_\\]*)*))?',
+        re.IGNORECASE
+    )
+
+    CONSTANT_PATTERN = re.compile(
+        r'const\s+([a-zA-Z_][a-zA-Z0-9_]*)\s*=\s*(.*?)\s*;',
+        re.IGNORECASE
+    )
+
+    PROPERTY_PATTERN = re.compile(
+        r'(?:(?:public|private|protected|static|var)\s+)+([a-zA-Z_][a-zA-Z0-9_]*)'
+        r'(?:\s*:\s*([^=;]+))?'
+        r'(?:\s*=\s*(.*?))?\s*;',
+        re.IGNORECASE
+    )
+
+    DOCBLOCK_PATTERN = re.compile(
+        r'/\*\*(.*?)\*/',
+        re.DOTALL
+    )
+
+    FQCN_PATTERN = re.compile(
+        r'[a-zA-Z_][a-zA-Z0-9_\\]*',
+        re.IGNORECASE
+    )
+
+    def __init__(self, root_path: str):
+        self.root_path = Path(root_path).resolve()
+        self.index: CodebaseIndex = CodebaseIndex(root_path=str(self.root_path))
+        self.current_namespace: Optional[str] = None
+        self.current_class: Optional[Tuple[str, ClassInfo]] = None
+        self.current_file: Optional[str] = None
+        self.file_uses: Dict[str, str] = {}
+
+    def scan(self) -> CodebaseIndex:
+        """Scan the codebase and build the index."""
+        if not self.root_path.exists():
+            raise ValueError(f"Path does not exist: {self.root_path}")
+
+        for php_file in self._find_php_files():
+            self._index_file(php_file)
+
+        self._resolve_dependencies()
+        return self.index
+
+    def _find_php_files(self) -> List[Path]:
+        """Find all PHP files in the codebase."""
+        php_files = []
+        for root, _, files in os.walk(self.root_path):
+            for file in files:
+                if file.endswith('.php'):
+                    php_files.append(Path(root) / file)
+        return php_files
+
+    def _index_file(self, file_path: Path) -> None:
+        """Index a single PHP file."""
+        relative_path = str(file_path.relative_to(self.root_path))
+        self.current_file = relative_path
+        self.current_namespace = None
+        self.current_class = None
+        self.file_uses = {}
+
+        try:
+            content = file_path.read_text(encoding='utf-8', errors='replace')
+        except (UnicodeDecodeError, PermissionError):
+            return
+
+        file_index = FileIndex(
+            path=relative_path,
+            line_count=len(content.splitlines()),
+            size=len(content)
+        )
+
+        lines = content.splitlines()
+
+        for line_num, line in enumerate(lines, 1):
+            self._parse_line(line, line_num, file_index)
+
+        # Resolve full qualified names for classes and functions
+        self._resolve_fqn_in_file(file_index)
+
+        # Add to main index
+        self.index.files[relative_path] = file_index
+
+        # Update global class index
+        for class_name, class_info in file_index.classes.items():
+            fqcn = self._build_fqcn(class_name, file_index.namespace)
+            self.index.classes[fqcn] = class_info
+
+        # Update global function index
+        for func_name, func_info in file_index.functions.items():
+            fqcn = self._build_fqcn(func_name, file_index.namespace)
+            self.index.functions[fqcn] = func_info
+
+        # Update namespace index
+        ns = file_index.namespace or ''
+        if ns not in self.index.namespaces:
+            self.index.namespaces[ns] = {
+                'classes': set(),
+                'functions': set(),
+                'constants': set()
+            }
+        self.index.namespaces[ns]['classes'].update(file_index.classes.keys())
+        self.index.namespaces[ns]['functions'].update(file_index.functions.keys())
+        self.index.namespaces[ns]['constants'].update(file_index.constants.keys())
+
+    def _parse_line(self, line: str, line_num: int, file_index: FileIndex) -> None:
+        """Parse a single line of PHP code."""
+        # Skip comments for most parsing
+        line_stripped = line.strip()
+
+        # Parse namespace
+        namespace_match = self.NAMESPACE_PATTERN.search(line)
+        if namespace_match:
+            self.current_namespace = namespace_match.group(1)
+            file_index.namespace = self.current_namespace
+
+        # Parse use statements
+        for use_match in self.USE_PATTERN.finditer(line):
+            fqcn = use_match.group(1)
+            alias = use_match.group(2) or fqcn.split('\\')[-1]
+            self.file_uses[alias] = fqcn
+            file_index.uses[alias] = fqcn
+
+        # Parse require/include
+        for req_match in self.REQUIRE_PATTERN.finditer(line):
+            req_file = req_match.group(1)
+            if 'require' in line.lower():
+                file_index.requires.append(req_file)
+            else:
+                file_index.includes.append(req_file)
+
+        # Parse class/interface/trait/enum
+        class_match = self.CLASS_PATTERN.search(line)
+        if class_match:
+            class_name = class_match.group(1)
+            parent = class_match.group(2)
+            interfaces_str = class_match.group(3)
+            traits_str = class_match.group(4)
+
+            class_type = 'class'
+            if line.lower().startswith('interface'):
+                class_type = 'interface'
+            elif line.lower().startswith('trait'):
+                class_type = 'trait'
+            elif line.lower().startswith('enum'):
+                class_type = 'enum'
+
+            is_abstract = 'abstract' in line.lower()
+            is_final = 'final' in line.lower()
+
+            interfaces = []
+            if interfaces_str:
+                interfaces = [i.strip() for i in interfaces_str.split(',')]
+
+            traits = []
+            if traits_str:
+                traits = [t.strip() for t in traits_str.split(',')]
+
+            class_info = ClassInfo(
+                name=class_name,
+                type=class_type,
+                namespace=self.current_namespace,
+                parent=parent,
+                interfaces=interfaces,
+                traits=traits,
+                is_abstract=is_abstract,
+                is_final=is_final,
+                location=Location(
+                    file=self.current_file,
+                    start=Position(line=line_num, column=line.find(class_name) + 1),
+                    end=Position(line=line_num, column=line.find(class_name) + len(class_name) + 1)
+                )
+            )
+
+            file_index.classes[class_name] = class_info
+            self.current_class = (class_name, class_info)
+
+        # Parse methods within current class
+        if self.current_class:
+            class_name, class_info = self.current_class
+            func_matches = self.FUNCTION_PATTERN.finditer(line)
+            for func_match in func_matches:
+                func_name = func_match.group(1).lstrip('&')
+                params_str = func_match.group(2)
+                return_type = func_match.group(3)
+
+                # Parse visibility
+                is_public = True
+                is_private = False
+                is_protected = False
+                is_static = False
+
+                prefix = line[:func_match.start()].lower()
+                if 'private' in prefix:
+                    is_private = True
+                    is_public = False
+                elif 'protected' in prefix:
+                    is_protected = True
+                    is_public = False
+                if 'static' in prefix:
+                    is_static = True
+
+                # Parse parameters
+                parameters = self._parse_parameters(params_str)
+
+                func_info = FunctionInfo(
+                    name=func_name,
+                    parameters=parameters,
+                    return_type=return_type,
+                    is_static=is_static,
+                    is_public=is_public,
+                    is_private=is_private,
+                    is_protected=is_protected,
+                    location=Location(
+                        file=self.current_file,
+                        start=Position(line=line_num, column=func_match.start() + 1),
+                        end=Position(line=line_num, column=func_match.end() + 1)
+                    )
+                )
+
+                class_info.methods[func_name] = func_info
+
+        # Parse global functions (not within a class)
+        if not self.current_class:
+            func_matches = self.FUNCTION_PATTERN.finditer(line)
+            for func_match in func_matches:
+                func_name = func_match.group(1).lstrip('&')
+                params_str = func_match.group(2)
+                return_type = func_match.group(3)
+
+                parameters = self._parse_parameters(params_str)
+
+                func_info = FunctionInfo(
+                    name=func_name,
+                    parameters=parameters,
+                    return_type=return_type,
+                    location=Location(
+                        file=self.current_file,
+                        start=Position(line=line_num, column=func_match.start() + 1),
+                        end=Position(line=line_num, column=func_match.end() + 1)
+                    )
+                )
+
+                file_index.functions[func_name] = func_info
+
+        # Parse class constants
+        if self.current_class:
+            class_name, class_info = self.current_class
+            for const_match in self.CONSTANT_PATTERN.finditer(line):
+                const_name = const_match.group(1)
+                const_value = const_match.group(2).strip()
+                class_info.constants[const_name] = const_value
+
+        # Parse properties
+        if self.current_class:
+            class_name, class_info = self.current_class
+            for prop_match in self.PROPERTY_PATTERN.finditer(line):
+                prop_name = prop_match.group(1)
+                prop_type = prop_match.group(2)
+                prop_value = prop_match.group(3)
+                class_info.properties[prop_name] = prop_type or ''
+
+        # Parse file-level constants
+        if not self.current_class and 'const' in line.lower():
+            for const_match in self.CONSTANT_PATTERN.finditer(line):
+                const_name = const_match.group(1)
+                const_value = const_match.group(2).strip()
+                file_index.constants[const_name] = const_value
+
+        # Parse docblocks
+        for docblock_match in self.DOCBLOCK_PATTERN.finditer(line):
+            docblock = docblock_match.group(1).strip()
+            if self.current_class:
+                class_name, class_info = self.current_class
+                class_info.docblock = docblock
+
+    def _parse_parameters(self, params_str: str) -> List[str]:
+        """Parse function parameters from parameter list string."""
+        if not params_str:
+            return []
+
+        parameters = []
+        # Simple parsing - split by comma and get parameter names
+        parts = [p.strip() for p in params_str.split(',') if p.strip()]
+        for part in parts:
+            # Extract parameter name (last word before = or :)
+            param_name = part.split('=')[0].strip()
+            param_name = param_name.split(':')[-1].strip()
+            param_name = param_name.rstrip('&')
+            if param_name and param_name != '...':
+                parameters.append(param_name)
+        return parameters
+
+    def _build_fqcn(self, name: str, namespace: Optional[str]) -> str:
+        """Build fully qualified class/function name."""
+        if namespace:
+            return f"{namespace}\\{name}"
+        return name
+
+    def _resolve_fqn_in_file(self, file_index: FileIndex) -> None:
+        """Resolve FQCNs for elements in a file using use statements."""
+        # Resolve parent class and interfaces for classes
+        for class_info in file_index.classes.values():
+            if class_info.parent:
+                class_info.parent = self._resolve_alias(class_info.parent, file_index.uses)
+            class_info.interfaces = [
+                self._resolve_alias(i, file_index.uses)
+                for i in class_info.interfaces
+            ]
+            class_info.traits = [
+                self._resolve_alias(t, file_index.uses)
+                for t in class_info.traits
+            ]
+
+    def _resolve_alias(self, name: str, uses: Dict[str, str]) -> str:
+        """Resolve a class name to its FQCN using use statements."""
+        if '\\' in name:
+            # Already fully qualified
+            return name
+
+        # Check if it's an alias
+        if name in uses:
+            return uses[name]
+
+        return name
+
+    def _resolve_dependencies(self) -> None:
+        """Build dependency graph between classes."""
+        for fqcn, class_info in self.index.classes.items():
+            deps = set()
+
+            # Add parent class dependency
+            if class_info.parent:
+                deps.add(class_info.parent)
+
+            # Add interface dependencies
+            for interface in class_info.interfaces:
+                deps.add(interface)
+
+            # Add trait dependencies
+            for trait in class_info.traits:
+                deps.add(trait)
+
+            # Add type dependencies from methods
+            for method in class_info.methods.values():
+                if method.return_type:
+                    type_deps = self._extract_type_dependencies(method.return_type)
+                    deps.update(type_deps)
+                for param in method.parameters:
+                    # Parameter types would be parsed from method signature
+                    pass
+
+            self.index.dependencies[fqcn] = deps
+
+    def _extract_type_dependencies(self, type_hint: str) -> Set[str]:
+        """Extract class dependencies from a type hint."""
+        deps = set()
+        # Remove union types and nullable indicators
+        clean_type = type_hint.replace('|', ' ').replace('?', '').replace('null', '')
+        # Find all FQCNs in the type hint
+        for match in self.FQCN_PATTERN.finditer(clean_type):
+            fqcn = match.group(0)
+            if fqcn and fqcn not in ['self', 'parent', 'static', 'array', 'callable', 'string', 'int', 'float', 'bool', 'void', 'null', 'mixed', 'object']:
+                deps.add(fqcn)
+        return deps
+
+    def to_dict(self) -> dict:
+        """Convert index to dictionary for serialization."""
+        def convert_to_dict(obj):
+            """Convert dataclass to dict recursively."""
+            if hasattr(obj, '__dataclass_fields__'):
+                return {k: convert_to_dict(v) for k, v in asdict(obj).items()}
+            elif isinstance(obj, dict):
+                return {k: convert_to_dict(v) for k, v in obj.items()}
+            elif isinstance(obj, (list, tuple, set)):
+                return [convert_to_dict(v) for v in obj]
+            return obj
+
+        return convert_to_dict(self.index)
+
+    def to_json(self, indent: int = 2) -> str:
+        """Convert index to JSON string."""
+        return json.dumps(self.to_dict(), indent=indent, ensure_ascii=False)
+
+    def save_json(self, path: str, indent: int = 2) -> None:
+        """Save index to JSON file."""
+        with open(path, 'w', encoding='utf-8') as f:
+            json.dump(self.to_dict(), f, indent=indent, ensure_ascii=False)
+
+    def save_csv(self, path: str) -> None:
+        """Save simplified index to CSV file."""
+        with open(path, 'w', newline='', encoding='utf-8') as f:
+            writer = csv.writer(f)
+
+            # Write header
+            writer.writerow([
+                'type', 'fqcn', 'file', 'line', 'namespace',
+                'parent', 'interfaces', 'is_abstract', 'is_final',
+                'method_count', 'property_count'
+            ])
+
+            # Write classes
+            for fqcn, class_info in self.index.classes.items():
+                writer.writerow([
+                    class_info.type,
+                    fqcn,
+                    class_info.location.file if class_info.location else '',
+                    class_info.location.start.line if class_info.location else '',
+                    class_info.namespace or '',
+                    class_info.parent or '',
+                    ';'.join(class_info.interfaces),
+                    class_info.is_abstract,
+                    class_info.is_final,
+                    len(class_info.methods),
+                    len(class_info.properties)
+                ])
+
+            # Write functions
+            for fqcn, func_info in self.index.functions.items():
+                writer.writerow([
+                    'function',
+                    fqcn,
+                    func_info.location.file if func_info.location else '',
+                    func_info.location.start.line if func_info.location else '',
+                    '',  # namespace in fqcn
+                    '', '', '', '', '',
+                    len(func_info.parameters)
+                ])
+
+    def to_yaml(self, default_flow_style: bool = False) -> str:
+        """Convert index to YAML string."""
+        if not HAS_YAML:
+            raise ImportError("PyYAML is required for YAML output. Install with: pip install pyyaml")
+        return yaml.dump(self.to_dict(), default_flow_style=default_flow_style, allow_unicode=True, sort_keys=False)
+
+    def save_yaml(self, path: str, default_flow_style: bool = False) -> None:
+        """Save index to YAML file."""
+        if not HAS_YAML:
+            raise ImportError("PyYAML is required for YAML output. Install with: pip install pyyaml")
+        with open(path, 'w', encoding='utf-8') as f:
+            yaml.dump(self.to_dict(), f, default_flow_style=default_flow_style, allow_unicode=True, sort_keys=False)
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='PHP Codebase Indexer - Build an index of PHP classes, functions, and more.'
+    )
+    parser.add_argument(
+        'path',
+        type=str,
+        help='Root path of the PHP codebase to index'
+    )
+    parser.add_argument(
+        '-o', '--output',
+        type=str,
+        default=None,
+        help='Output file path (default: stdout)'
+    )
+    parser.add_argument(
+        '-f', '--format',
+        type=str,
+        choices=['json', 'csv', 'yaml'],
+        default='yaml',
+        help='Output format (default: yaml)'
+    )
+    parser.add_argument(
+        '--no-indent',
+        action='store_true',
+        help='Disable JSON indentation for smaller output'
+    )
+
+    args = parser.parse_args()
+
+    # Build index
+    indexer = PHPIndexer(args.path)
+    index = indexer.scan()
+
+    # Output
+    if args.format == 'yaml':
+        output = indexer.to_yaml(default_flow_style=False)
+    elif args.format == 'json':
+        indent = None if args.no_indent else 2
+        output = indexer.to_json(indent=indent)
+    else:  # csv
+        import tempfile
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False) as tmp:
+            tmp_path = tmp.name
+        indexer.save_csv(tmp_path)
+        with open(tmp_path, 'r', encoding='utf-8') as f:
+            output = f.read()
+        os.unlink(tmp_path)
+
+    if args.output:
+        if args.format == 'yaml':
+            indexer.save_yaml(args.output, default_flow_style=False)
+        elif args.format == 'json':
+            indexer.save_json(args.output, indent=None if args.no_indent else 2)
+        else:
+            indexer.save_csv(args.output)
+        print(f"Index saved to {args.output}")
+    else:
+        print(output)
+
+
+if __name__ == '__main__':
+    main()
