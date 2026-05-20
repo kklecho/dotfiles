@@ -28,6 +28,6 @@ alias gdfm='git diff main..$(git symbolic-ref --short HEAD) ' # show diff for th
 # gitcommitfileschanged <commit_hash>
 alias gitcommitfileschanged='git diff-tree --no-commit-id --name-only -r '
 alias gvd='git difftool --tool vimdiff'
+alias gmm="git merge main"
 export GPG_TTY=$(tty)
-export gmm="git merge main"
 
