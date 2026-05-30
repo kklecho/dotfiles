@@ -11,4 +11,5 @@ GEMINI.md
 CLAUDE.md
 .tsk.md
 commit.txt
+**/.claude/settings.local.json
 
