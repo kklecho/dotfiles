@@ -7,7 +7,7 @@
         wtf     = !$ZSH_DOTFILES/bin/git-wtf
         rank-contributors = !$ZSH_DOTFILES/bin/git-rank-contributors
         count   = !git shortlog -sn
-        done = !git commit -eF .commit.txt
+        done = !git commit -eF .cmt.txt
 [color]
         diff = auto
         status = auto
