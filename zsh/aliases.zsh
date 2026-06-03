@@ -42,3 +42,5 @@ alias m="ssh m"
 alias shortshell='export PS1="$ "'
 alias sts='shortshell'
 alias clwdirname="basename $PWD | clip"
+alias vd='vimdiff'
+
