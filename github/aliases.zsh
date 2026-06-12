@@ -1,2 +1,2 @@
-alias ghprf='github pr create --fill'
+alias ghprf='gh pr create --fill'
 
