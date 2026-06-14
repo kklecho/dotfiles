@@ -5,6 +5,8 @@ export EDITOR=vim
 export PTH_ENC_KEYFILE_PATH_COMMON="edit_me"
 export PTH_ENC_KEYFILE_PATH_LOCALRC_PRV="edit_me"
 
-export PTH_AIAG_MINI="~/vms/vm-local-klgamerbox"
-export PTH_AIAG_MINI="~/vms/vm-local-ai-agent-mini"
-export PTH_AIAG_STD="~/vms/vm-local-ai-agent-std"
+export PTH_AIAG_MINI="$HOME/vms/vm-local-klgamerbox"
+export PTH_AIAG_MINI="$HOME/vms/vm-local-ai-agent-mini"
+export PTH_AIAG_STD="$HOME/vms/vm-local-ai-agent-std"
+export PTH_SKILL_REPO_ROOT="$HOME/.skill_repos"
+
