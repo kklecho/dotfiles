@@ -56,8 +56,7 @@ function vibe-apply-feedback() {
 }
 
 function fn_takeskill() { 
-  mkdir .skills 2>/dev/null; 
-  [[ -d "$1" ]] && echo "$1" && rsync -av "$1" .skills 
+  mkdir -p .vibe/skills 2>/dev/null; 
+  [[ -d "$1" ]] && echo "$1" && rsync -av "$1" .vibe/skills 
 }
-
 
