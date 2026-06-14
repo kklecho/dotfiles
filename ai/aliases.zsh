@@ -28,3 +28,5 @@ alias caiagups='fn_aws_add_ec2_to_hosts aiag-std-kkl-cloud aiag-std-kkl-cloud; e
 alias caiagip-push='fn_aiag_ip_push'
 alias caiagip-pull='fn_aiag_ip_pull'
 alias k='[[ -f .tsk.md ]] && (mkdir -p .scratch/.done 2>/dev/null) && ts=$(date +%Y%m%d%H%M%S) && cp .tsk.md .scratch/.done/$ts.tsk.md && (mv .cmt.txt .scratch/.done/$ts.cmt.txt 2>/dev/null)'
+
+alias takeskill='mkdir .skills 2>/dev/null; cp $1 ./skills'
