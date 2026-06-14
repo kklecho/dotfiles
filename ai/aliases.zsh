@@ -29,4 +29,4 @@ alias caiagip-push='fn_aiag_ip_push'
 alias caiagip-pull='fn_aiag_ip_pull'
 alias k='[[ -f .tsk.md ]] && (mkdir -p .scratch/.done 2>/dev/null) && ts=$(date +%Y%m%d%H%M%S) && cp .tsk.md .scratch/.done/$ts.tsk.md && (mv .cmt.txt .scratch/.done/$ts.cmt.txt 2>/dev/null)'
 
-alias takeskill='mkdir .skills 2>/dev/null; cp $PTH_SKILL_REPOS_ROOT/**/$1 ./skills'
+alias takeskill='mkdir .skills 2>/dev/null; cp $PTH_SKILL_REPOS_ROOT/$1/**/$2 ./skills'
