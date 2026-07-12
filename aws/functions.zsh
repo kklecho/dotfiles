@@ -70,7 +70,7 @@ fn_aws_get_ec2_public_ip() {
         --output text
 }
 
-fn_aws_add_ec2_to_hosts() {
+fn_aws_start_and_add_ec2_to_hosts() {
     local instance_name="$1"
     local host_name="$2"
     
@@ -97,4 +97,23 @@ fn_aws_add_ec2_to_hosts() {
     echo ""
     echo "Now run:"
     echo 'sudo sed -i "s/^.*'"${host_name}"'\\s*$/'"${public_ip}"'\    '"${host_name}"'/" /etc/hosts'
+}
+
+
+
+fn_aws_stop_ec2() {
+    local instance_name="$1"
+    
+    local instance_id=$(fn_aws_get_ec2_instance_id "$instance_name")
+    if [[ -z "$instance_id" ]]; then
+        echo "Error: Instance with name '$instance_name' not found."
+        return 1
+    fi
+    echo "Instance ID: $instance_id"
+    
+    (aws ec2 stop-instances --instance-ids "$instance_id") &
+
+    echo "Waiting for instance to be in 'stopped' state..."
+    aws ec2 wait instance-stopped --instance-ids "$instance_id"
+    echo "Instance is now stopped."
 }
