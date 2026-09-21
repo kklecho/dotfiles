@@ -43,3 +43,5 @@ alias te="code --reuse-window ./.test.sh"
 alias tt="test-all"
 alias ttt="test-all-and-pre-commit"
 alias srenv="source .env"
+alias scratchit=fn_scratch_here
+

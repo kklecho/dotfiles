@@ -167,3 +167,10 @@ function csv2sqlite() {
     # "name": "py.db"
     # }        
 }
+
+function fn_scratch_here() {
+  cwd_name=$(basename -- "$PWD")
+  mkdir -p "$HOME/.scratch/$cwd_name" 2>/dev/null
+  ln -s "$HOME/.scratch/$cwd_name" ./.scratch
+}
+

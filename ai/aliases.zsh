@@ -32,7 +32,9 @@ alias caiagdownm='fn_aws_stop_ec2 aiag-mini-kkl-cloud'
 alias caiagdowns='fn_aws_stop_ec2 aiag-std-kkl-cloud'
 
 
-alias k='[[ -f .tsk.md ]] && (mkdir -p .scratch/.done 2>/dev/null) && ts=$(date +%Y%m%d%H%M%S) && cp .tsk.md .scratch/.done/$ts.tsk.md && (mv .cmt.txt .scratch/.done/$ts.cmt.txt 2>/dev/null)'
+alias k='[[ -f .tsk ]] && (mkdir -p .scratch/.done 2>/dev/null) && ts=$(date +%Y%m%d%H%M%S) && cp .tsk .scratch/.done/$ts.tsk.md && (mv .cmt .scratch/.done/$ts.cmt.txt 2>/dev/null)'
+alias kk='[[ -f .tsk ]] && (mkdir -p .scratch/.done 2>/dev/null) && ts=$(date +%Y%m%d%H%M%S) && cp .tsk .scratch/.done/$ts.tsk.md && (mv .cmt .scratch/.done/$ts.cmt.txt 2>/dev/null) && (cp .ctx .scratch/.done/$ts.ctx.txt 2>/dev/null)'
 
 alias takeskill=fn_takeskill
+alias aikb-here=fn_aikb_here
 

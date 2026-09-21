@@ -60,3 +60,10 @@ function fn_takeskill() {
   [[ -d "$1" ]] && echo "$1" && rsync -av "$1" .vibe/skills 
 }
 
+function fn_aikb_here() {
+  cwd_name=$(basename -- "$PWD")
+  mkdir -p "$HOME/aikb/$cwd_name/llm_facts" 2>/dev/null
+  mkdir -p "$HOME/aikb/$cwd_name/human_facts" 2>/dev/null
+  mkdir -p "$HOME/aikb/$cwd_name/tool_facts" 2>/dev/null
+  ln -s "$HOME/aikb/$cwd_name" ./.aikb
+}
