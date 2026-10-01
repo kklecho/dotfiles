@@ -30,5 +30,6 @@ alias gitcommitfileschanged='git diff-tree --no-commit-id --name-only -r '
 alias gvd='git difftool --tool vimdiff'
 alias gmm="git merge main"
 alias git-configure-ssh-key=fn_git_configure_ssh_key
+alias gbdc=fn_gbdc
 export GPG_TTY=$(tty)
 
