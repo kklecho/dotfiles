@@ -12,6 +12,7 @@ alias agvifb='agr; vibe -p fb'
 
 alias caiaga='ssh a@$HOST_CAIAGM'
 alias caiagal='sshl 8080:127.0.0.1:8000 a@$HOST_CAIAGM'
+alias caiagsl='sshl 8080:127.0.0.1:8000 a@$HOST_CAIAGS'
 alias caiaga-std='ssh a@$HOST_CAIAGS'
 alias caiagb='ssh b@$HOST_CAIAGM'
 alias caiagb-std='ssh b@$HOST_CAIAGS'
