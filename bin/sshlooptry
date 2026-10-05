@@ -1,0 +1,5 @@
+#!/bin/bash
+while true; do
+  ssh -o ConnectTimeout=5 -q "$1" exit && break
+done
+
