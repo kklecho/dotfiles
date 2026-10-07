@@ -6,3 +6,12 @@ function fn_gamerup() {
     (cd $PATH_GAMER; vagrant up)
   fi 
 }
+
+function fn_gamedown() {
+  if [[ -z "$PATH_GAMER" ]]
+  then
+    echo "PATH_GAMER must be set"; 
+  else
+    (cd $PATH_GAMER; vagrant halt)
+  fi 
+}
