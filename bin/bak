@@ -2,44 +2,83 @@
 
 # Check if file path argument is provided
 if [ -z "$1" ]; then
-    echo "Error: Please provide a file path as argument" >&2
+    echo "Error: Please provide a file or directory path as argument" >&2
     exit 1
 fi
 
-# Get the absolute path of the source file
-SRC_FILE="$(realpath "$1")"
-
-# Check if the source file exists
-if [ ! -f "$SRC_FILE" ]; then
-    echo "Error: File '$1' does not exist or is not a regular file" >&2
-    exit 1
-fi
+# Get the absolute path of the source
+SRC_PATH="$(realpath "$1")"
 
 # Create backup directory if it doesn't exist
 BAK_DIR="$HOME/bak"
 mkdir -p "$BAK_DIR"
 
-# Extract basedir_name (name of the directory containing the file)
-DIR_PATH="$(dirname "$SRC_FILE")"
-BASEDIR_NAME="$(basename "$DIR_PATH")"
-
-# Extract filename (without path)
-FILENAME="$(basename "$SRC_FILE")"
-
 # Generate timestamp in YMDHm format (YearMonthDayHourMinute)
 TIMESTAMP="$(date +"%Y%m%d%H%M")"
 
-# Construct backup filename
-BACKUP_FILENAME="${BASEDIR_NAME}_${FILENAME}.bak.${TIMESTAMP}"
-BACKUP_PATH="${BAK_DIR}/${BACKUP_FILENAME}"
-
-# Create the backup
-cp "$SRC_FILE" "$BACKUP_PATH"
-
-# Check if copy was successful
-if [ $? -eq 0 ]; then
-    echo "Backup created: $BACKUP_PATH"
+if [ -d "$SRC_PATH" ]; then
+    # Handle directory input
+    # Extract directory name (without path)
+    DIR_NAME="$(basename "$SRC_PATH")"
+    
+    # Create a temporary directory for the tar process
+    TMP_DIR=$(mktemp -d)
+    
+    # Create the tar.gz archive with highest compression level (9)
+    TAR_FILE="${TMP_DIR}/${DIR_NAME}.tar"
+    tar -cf "$TAR_FILE" -C "$(dirname "$SRC_PATH")" "$DIR_NAME" || {
+        echo "Error: Failed to create tar archive for directory '$1'" >&2
+        rm -rf "$TMP_DIR"
+        exit 1
+    }
+    gzip -9 "$TAR_FILE" || {
+        echo "Error: Failed to compress tar archive for directory '$1'" >&2
+        rm -rf "$TMP_DIR"
+        exit 1
+    }
+    TAR_FILE="${TAR_FILE}.gz"
+    
+    # Construct backup filename for directory
+    BACKUP_FILENAME="${DIR_NAME}.bak.${TIMESTAMP}.tar.gz"
+    BACKUP_PATH="${BAK_DIR}/${BACKUP_FILENAME}"
+    
+    # Move the tar file to the backup directory
+    mv "$TAR_FILE" "$BACKUP_PATH"
+    
+    # Clean up temp directory
+    rm -rf "$TMP_DIR"
+    
+    # Check if move was successful
+    if [ $? -eq 0 ]; then
+        echo "Backup created: $BACKUP_PATH"
+    else
+        echo "Error: Failed to create backup" >&2
+        exit 1
+    fi
+elif [ -f "$SRC_PATH" ]; then
+    # Handle file input (original logic)
+    # Extract basedir_name (name of the directory containing the file)
+    DIR_PATH="$(dirname "$SRC_PATH")"
+    BASEDIR_NAME="$(basename "$DIR_PATH")"
+    
+    # Extract filename (without path)
+    FILENAME="$(basename "$SRC_PATH")"
+    
+    # Construct backup filename
+    BACKUP_FILENAME="${BASEDIR_NAME}_${FILENAME}.bak.${TIMESTAMP}"
+    BACKUP_PATH="${BAK_DIR}/${BACKUP_FILENAME}"
+    
+    # Create the backup
+    cp "$SRC_PATH" "$BACKUP_PATH"
+    
+    # Check if copy was successful
+    if [ $? -eq 0 ]; then
+        echo "Backup created: $BACKUP_PATH"
+    else
+        echo "Error: Failed to create backup" >&2
+        exit 1
+    fi
 else
-    echo "Error: Failed to create backup" >&2
+    echo "Error: '$1' does not exist or is neither a regular file nor a directory" >&2
     exit 1
 fi
