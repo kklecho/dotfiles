@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Check if file path argument is provided
+if [ -z "$1" ]; then
+    echo "Error: Please provide a file path as argument" >&2
+    exit 1
+fi
+
+# Get the absolute path of the source file
+SRC_FILE="$(realpath "$1")"
+
+# Check if the source file exists
+if [ ! -f "$SRC_FILE" ]; then
+    echo "Error: File '$1' does not exist or is not a regular file" >&2
+    exit 1
+fi
+
+# Create backup directory if it doesn't exist
+BAK_DIR="$HOME/bak"
+mkdir -p "$BAK_DIR"
+
+# Extract basedir_name (name of the directory containing the file)
+DIR_PATH="$(dirname "$SRC_FILE")"
+BASEDIR_NAME="$(basename "$DIR_PATH")"
+
+# Extract filename (without path)
+FILENAME="$(basename "$SRC_FILE")"
+
+# Generate timestamp in YMDHm format (YearMonthDayHourMinute)
+TIMESTAMP="$(date +"%Y%m%d%H%M")"
+
+# Construct backup filename
+BACKUP_FILENAME="${BASEDIR_NAME}_${FILENAME}.bak.${TIMESTAMP}"
+BACKUP_PATH="${BAK_DIR}/${BACKUP_FILENAME}"
+
+# Create the backup
+cp "$SRC_FILE" "$BACKUP_PATH"
+
+# Check if copy was successful
+if [ $? -eq 0 ]; then
+    echo "Backup created: $BACKUP_PATH"
+else
+    echo "Error: Failed to create backup" >&2
+    exit 1
+fi
