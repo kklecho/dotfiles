@@ -83,6 +83,10 @@ setup_localrc_baseline() {
 
   cp $DOTFILES_ROOT/zsh/.localrc.dist $HOME/.localrc
 
+  touch $HOME/.localrc.prv
+
+  chmod 0600 $HOME/.localrc
+  chmod 0600 $HOME/.localrc.prv 2>/dev/null
   success 'localrc'
 }
 
