@@ -11,6 +11,35 @@ import subprocess
 from datetime import datetime, timezone
 
 
+def is_s3_path(path):
+    """Check if path is an S3 URI."""
+    return path.strip().startswith("s3://")
+
+
+def upload_with_s3(local_path, s3_uri):
+    """Upload file to S3 using aws s3 cp."""
+    cmd = [
+        "aws", "s3", "cp",
+        local_path,
+        s3_uri
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    return result
+
+
+def upload_with_rsync(local_path, remote_path):
+    """Upload file using rsync."""
+    cmd = [
+        "rsync",
+        "-avz",
+        "--delete",
+        local_path,
+        remote_path,
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    return result
+
+
 def main():
     # 1. Check required environment variables
     path_root = os.environ.get("SCRATCH_SYNC_PATH_ROOT")
@@ -30,6 +59,8 @@ def main():
     scratch_dir = os.path.expanduser("~/.scratch")
     if not os.path.exists(scratch_dir):
         print(f"WARNING: Scratch directory not found: {scratch_dir}. Creating empty archive.", file=sys.stderr)
+
+    use_s3 = is_s3_path(path_root)
 
     # 2. Create temp directory
     temp_dir = tempfile.mkdtemp(prefix="scratchpush_")
@@ -71,23 +102,21 @@ def main():
         shutil.copy2(enc_archive_path, latest_path)
         print(f"Created latest copy: {latest_path}")
 
-        # 6. Rsync both encrypted files to target locations
+        # 6. Sync both encrypted files to target locations
         files_to_sync = [enc_archive_name, "scratch_latest.tar.gz.enc"]
         for filename in files_to_sync:
             src_path = os.path.join(temp_dir, filename)
             # Build destination path from root
             dest_path = os.path.join(path_root, filename)
-            rsync_cmd = [
-                "rsync",
-                "-avz",
-                "--delete",
-                src_path,
-                dest_path,
-            ]
-            print(f"Rsync: {' '.join(rsync_cmd)}")
-            result = subprocess.run(rsync_cmd, capture_output=True, text=True)
+            
+            if use_s3:
+                print(f"Using AWS S3 to upload to: {dest_path}")
+                result = upload_with_s3(src_path, dest_path)
+            else:
+                result = upload_with_rsync(src_path, dest_path)
+            
             if result.returncode != 0:
-                print(f"WARNING: Rsync failed for {filename}: {result.stderr}", file=sys.stderr)
+                print(f"WARNING: Sync failed for {filename}: {result.stderr}", file=sys.stderr)
 
         print("Push completed successfully")
 
