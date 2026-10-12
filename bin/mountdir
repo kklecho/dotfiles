@@ -1,0 +1,47 @@
+#!/bin/bash
+
+if [ "$(id -u)" -ne 0 ]; then
+    echo "Error: This script must be run as root"
+    exit 1
+fi
+
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <source_path> <target_path>"
+    exit 1
+fi
+
+# Function to get absolute path of a directory, resolving symlinks
+get_abs_dir() {
+    local dir="$1"
+    if [ ! -d "$dir" ]; then
+        return 1
+    fi
+    (cd "$dir" && pwd -P)
+}
+
+# Get and verify source path
+SOURCE=$(get_abs_dir "$1") || { echo "Error: Source path '$1' is not a directory"; exit 1; }
+
+# Get and verify target path
+TARGET=$(get_abs_dir "$2") || { echo "Error: Target path '$2' is not a directory"; exit 1; }
+
+# Check if target is already a mount point
+if mountpoint -q "$TARGET"; then
+    echo "Error: Target path '$TARGET' is already mounted"
+    exit 1
+fi
+
+# Perform the bind mount
+if ! mount --bind "$SOURCE" "$TARGET"; then
+    echo "Error: Failed to bind mount $SOURCE to $TARGET"
+    exit 1
+fi
+
+# Add entry to fstab
+FSTAB_LINE="$SOURCE $TARGET none defaults,bind,nofail,x-systemd.device-timeout=2 0 0"
+if ! grep -qxF "$FSTAB_LINE" /etc/fstab; then
+    echo "$FSTAB_LINE" >> /etc/fstab
+    echo "Added to /etc/fstab"
+fi
+
+echo "Successfully bind-mounted $SOURCE at $TARGET"
