@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [[ $# -eq 0 ]]; then
+    echo "Error: No input file specified."
+    echo "Usage: $0 <input_file>"
+    exit 1
+fi
+
+INPUT_FILE="$1"
+
+if [[ ! -f "$INPUT_FILE" ]]; then
+    echo "Error: Input file '$INPUT_FILE' not found."
+    exit 1
+fi
+
+# Read each domain from the input file
+echo "Available domains:"
+while IFS= read -r domain || [[ -n "$domain" ]]; do
+    [[ -z "$domain" ]] && continue
+    
+    base_domain=$(echo "$domain")
+    
+    response=$(curl -s --max-time 5 "https://dns.google/resolve?name=${base_domain}&type=A" 2>/dev/null)
+    
+    if echo "$response" | grep -q '"Status":3'; then
+        echo "${base_domain}"
+    fi
+done < "$INPUT_FILE"
+

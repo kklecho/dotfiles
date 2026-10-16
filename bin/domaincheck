@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Check if domain argument is provided
+if [[ $# -eq 0 ]]; then
+    echo "Error: No domain specified."
+    echo "Usage: $0 <domain>"
+    exit 1
+fi
+
+DOMAIN="$1"
+
+# Query Google's DNS-over-HTTPS for A record
+response=$(curl -s --max-time 5 "https://dns.google/resolve?name=${DOMAIN}&type=A" 2>/dev/null)
+
+# Check if domain does not exist (Status: 3 = NXDOMAIN)
+if echo "$response" | grep -q '"Status":3'; then
+    echo "ok"
+else
+    echo "unavailable"
+fi
