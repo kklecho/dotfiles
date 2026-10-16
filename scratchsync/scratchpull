@@ -11,6 +11,34 @@ import subprocess
 from datetime import datetime, timezone
 
 
+def is_s3_path(path):
+    """Check if path is an S3 URI."""
+    return path.strip().startswith("s3://")
+
+
+def download_with_s3(s3_uri, local_path):
+    """Download file from S3 using aws s3 cp."""
+    cmd = [
+        "aws", "s3", "cp",
+        s3_uri,
+        local_path
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    return result
+
+
+def download_with_rsync(remote_path, local_path):
+    """Download file using rsync."""
+    cmd = [
+        "rsync",
+        "-avz",
+        remote_path,
+        local_path,
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    return result
+
+
 def main():
     # 1. Check required environment variables
     path_root = os.environ.get("SCRATCH_SYNC_PATH_ROOT")
@@ -27,6 +55,8 @@ def main():
         print(f"ERROR: Encryption key file not found: {enc_key_path}", file=sys.stderr)
         sys.exit(1)
 
+    use_s3 = is_s3_path(path_root)
+
     # 2. Create temp directory
     temp_dir = tempfile.mkdtemp(prefix="scratchpull_")
     print(f"Created temp directory: {temp_dir}")
@@ -37,13 +67,12 @@ def main():
         latest_local_path = os.path.join(temp_dir, "scratch_latest.tar.gz.enc")
 
         # Copy latest file from remote if it exists
-        rsync_check_cmd = [
-            "rsync",
-            "-avz",
-            f"{latest_remote_path}",
-            latest_local_path,
-        ]
-        result = subprocess.run(rsync_check_cmd, capture_output=True, text=True)
+        if use_s3:
+            print(f"Using AWS S3 to download from: {latest_remote_path}")
+            result = download_with_s3(latest_remote_path, latest_local_path)
+        else:
+            result = download_with_rsync(latest_remote_path, latest_local_path)
+        
         if result.returncode != 0:
             # File not found on remote
             print(f"Latest file not found on remote: {latest_remote_path}")
