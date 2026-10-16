@@ -1,4 +1,5 @@
 alias a='vibe --max-price 0.7 '
+alias myskills="cd ~/ai-skills"
 alias viber='vibe -c --max-price 0.7 --trust --agent auto-approve'
 alias agr='source .ai/.env; agr-agent-rebuild'
 alias vip='vibe --max-price 0.7 --trust --agent auto-approve -p'
@@ -9,7 +10,8 @@ alias vifb='vibe --max-price 0.7 --trust --agent auto-approve -p fb'
 alias agvip='agr; vibe -p'
 alias agvigo='agr; vibe -p go'
 alias agvifb='agr; vibe -p fb'
-
+alias agbox='ssh a@"$(fn_aws_get_ec2_public_ip agbox)"'
+alias agbox-admin='ssh admin@"$(fn_aws_get_ec2_public_ip agbox)"'
 alias caiaga='ssh a@$HOST_CAIAGM'
 alias caiagal='sshl 8080:127.0.0.1:8000 a@$HOST_CAIAGM'
 alias caiagsl='sshl 8080:127.0.0.1:8000 a@$HOST_CAIAGS'
@@ -25,12 +27,14 @@ alias aiagupm='(cd $PTH_AIAG_MINI; vagrant up)'
 alias aiagups='(cd $PTH_AIAG_STD; vagrant up)'
 
 
+alias caiagboxup='fn_aws_start_and_add_ec2_to_hosts agbox-cloud; echo "now:\ncaiagip-push; caiagip-pull; srclocalrc"'
 alias caiagupm='fn_aws_start_and_add_ec2_to_hosts aiag-mini-kkl-cloud aiag-mini-kkl-cloud; echo "now:\ncaiagip-push; caiagip-pull; srclocalrc"'
 alias caiagups='fn_aws_start_and_add_ec2_to_hosts aiag-std-kkl-cloud aiag-std-kkl-cloud; echo "now:\ncaiagip-push; caiagip-pull; srclocalrc"'
 alias caiagip-push='fn_aiag_ip_push'
 alias caiagip-pull='fn_aiag_ip_pull'
 alias caiagdownm='fn_aws_stop_ec2 aiag-mini-kkl-cloud'
 alias caiagdowns='fn_aws_stop_ec2 aiag-std-kkl-cloud'
+alias caiagboxdown='fn_aws_stop_ec2 agbox'
 
 
 alias k='[[ -f .tsk ]] && (mkdir -p .scratch/.done 2>/dev/null) && ts=$(date +%Y%m%d%H%M%S) && cp .tsk .scratch/.done/$ts.tsk.md && (mv .cmt .scratch/.done/$ts.cmt.txt 2>/dev/null)'
