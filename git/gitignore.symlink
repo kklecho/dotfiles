@@ -17,4 +17,5 @@ CLAUDE.md
 .cmt
 **/.claude/settings.local.json
 .vibe/skills
+,error.txt
 
