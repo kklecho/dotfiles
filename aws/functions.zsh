@@ -28,6 +28,17 @@ function ec2-list-amis-debian-bookworm() {
         --query 'Images[*].[ImageId,CreationDate,Name,Description]'
 }
 
+function ec2-list-amis-debian-trixie() {
+    aws ec2 describe-images \
+        --region eu-west-1 \
+        --owners "136693071363" \
+        --image-ids ami-0e8be3ef4b6a1f0fd \
+        --output json \
+        --query 'Images[*].[ImageId,CreationDate,Name,Description]'
+}
+
+
+
 function ec2-create-dev-instance() {
 
     vpcid="vpc-bc785fda"
