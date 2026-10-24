@@ -18,4 +18,8 @@ CLAUDE.md
 **/.claude/settings.local.json
 .vibe/skills
 ,error.txt
+.agents
+.vibe
+.gemini
+.claude
 
