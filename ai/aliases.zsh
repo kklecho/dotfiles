@@ -42,4 +42,6 @@ alias kk='[[ -f .tsk ]] && (mkdir -p .scratch/.done 2>/dev/null) && ts=$(date +%
 
 alias takeskill=fn_takeskill
 alias aikb-here=fn_aikb_here
+alias cxe="codex e"
+alias cxr="codex resume"
 
