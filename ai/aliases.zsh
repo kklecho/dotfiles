@@ -44,4 +44,5 @@ alias takeskill=fn_takeskill
 alias aikb-here=fn_aikb_here
 alias cxe="codex e"
 alias cxr="codex resume"
+alias cg="codex e go"
 
