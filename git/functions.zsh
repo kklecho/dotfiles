@@ -47,5 +47,6 @@ fn_gbdc() {
 
     echo "Switching to $default_branch and deleting $current_branch..."
     git checkout "$default_branch" && git branch -D "$current_branch"
+    git pull
 }
 
