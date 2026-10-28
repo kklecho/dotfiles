@@ -9,6 +9,15 @@ function labiallow() {
         --cidr $(curl -s https://checkip.amazonaws.com/)/32
 }
 
+function fn_aws_allow_ip_ssh() {
+    myip=$(curl -s https://checkip.amazonaws.com/)
+    ip=${1:-$myip}
+    aws ec2 authorize-security-group-ingress \
+        --group-id $AWS_SG_SSH_SELECTED_IPS \
+        --protocol tcp \
+        --port 22 \
+        --cidr $ip/32
+}
 
 function ec2-list-amis-ubuntu() {
 
