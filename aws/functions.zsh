@@ -119,8 +119,6 @@ fn_aws_start_and_add_ec2_to_hosts() {
     echo 'sudo sed -i "s/^.*'"${host_name}"'\\s*$/'"${public_ip}"'\    '"${host_name}"'/" /etc/hosts'
 }
 
-
-
 fn_aws_stop_ec2() {
     local instance_name="$1"
     
@@ -137,3 +135,38 @@ fn_aws_stop_ec2() {
     aws ec2 wait instance-stopped --instance-ids "$instance_id"
     echo "Instance is now stopped."
 }
+
+fn_aws_attach_sg_to_ec2() {
+  if [[ $# -ne 2 || -z ${1:-} || -z ${2:-} ]]; then
+    printf 'Usage: fn_aws_ec2_attach_sg <security-group-id> <instance-id> 
+' >&2
+    return 2
+  fi
+
+  local security_group_id=$1
+  local instance_id=$2
+  local current_groups
+  local -a groups
+
+  current_groups=$(aws ec2 describe-instances \
+    --instance-ids "$instance_id" \
+    --query 'Reservations[0].Instances[0].SecurityGroups[].GroupId' \
+    --output text) || return $?
+
+  # AWS CLI text output separates IDs with tabs; read handles that as whitespace.
+  read -r -A groups <<< "$current_groups"
+
+  local group
+  for group in "${groups[@]}"; do
+    if [[ $group == "$security_group_id" ]]; then
+      return 0
+    fi
+  done
+
+  groups+=("$security_group_id")
+
+  aws ec2 modify-instance-attribute \
+    --instance-id "$instance_id" \
+    --groups "${groups[@]}"
+}
+
