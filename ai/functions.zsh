@@ -73,3 +73,28 @@ function fn_aikb_here() {
   mkdir -p "$HOME/aikb/$cwd_name/tool_facts" 2>/dev/null
   ln -s "$HOME/aikb/$cwd_name" ./.aikb
 }
+
+fn_next_task() {
+    local source_file="$1"
+    local target_file="$2"
+
+    # Check if source file exists
+    if [[ ! -f "$source_file" ]]; then
+        echo "Error: Source file '$source_file' does not exist." >&2
+        return 1
+    fi
+
+    # Check if source file is readable
+    if [[ ! -r "$source_file" ]]; then
+        echo "Error: Source file '$source_file' is not readable." >&2
+        return 1
+    fi
+
+    # Extract first line and write to target file
+    head -n 1 "$source_file" > "$target_file"
+
+    # Remove first line from source file
+    tail -n +2 "$source_file" > "$source_file.tmp" && mv "$source_file.tmp" "$source_file"
+
+    echo "First line moved from '$source_file' to '$target_file'."
+}

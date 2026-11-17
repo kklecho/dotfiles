@@ -38,7 +38,7 @@ alias caiagboxdown='fn_aws_stop_ec2 agbox'
 
 alias k='[[ -f .tsk ]] && (mkdir -p .scratch/.done 2>/dev/null) && ts=$(date +%Y%m%d%H%M%S) && cp .tsk .scratch/.done/$ts.tsk.md && (mv .cmt .scratch/.done/$ts.cmt.txt 2>/dev/null)'
 alias kk='[[ -f .tsk ]] && (mkdir -p .scratch/.done 2>/dev/null) && ts=$(date +%Y%m%d%H%M%S) && cp .tsk .scratch/.done/$ts.tsk.md && (mv .cmt .scratch/.done/$ts.cmt.txt 2>/dev/null) && (cp .ctx .scratch/.done/$ts.ctx.txt 2>/dev/null)'
-
+alias nxt="fn_next_task .scratch/.next .tsk; fn_next_task .scratch/.next .cmt"
 alias takeskill=fn_takeskill
 alias aikb-here=fn_aikb_here
 alias cxe="codex e"
