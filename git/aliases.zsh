@@ -28,6 +28,7 @@ alias gdfm='git diff main..$(git symbolic-ref --short HEAD) ' # show diff for th
 # gitcommitfileschanged <commit_hash>
 alias gitcommitfileschanged='git diff-tree --no-commit-id --name-only -r '
 alias gvd='git difftool --tool vimdiff'
+alias gvdh='git difftool --tool vimdiff HEAD^'
 alias gmm="git merge main"
 alias git-configure-ssh-key=fn_git_configure_ssh_key
 alias gsp='git stash pop'
