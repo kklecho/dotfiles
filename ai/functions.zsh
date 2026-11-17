@@ -60,9 +60,9 @@ function fn_takeskill() {
   mkdir -p .codex 2>/dev/null; 
   mkdir -p .claude 2>/dev/null; 
   mkdir -p .gemini 2>/dev/null; 
-  ln -s .vibe/skills .codex/skills
-  ln -s .vibe/skills .claude/skills
-  ln -s .vibe/skills .gemini/skills
+  ln -s ../.vibe/skills .codex/skills
+  ln -s ../.vibe/skills .claude/skills
+  ln -s ../.vibe/skills .gemini/skills
   [[ -d "$1" ]] && echo "$1" && rsync -av "$1" .vibe/skills 
 }
 
