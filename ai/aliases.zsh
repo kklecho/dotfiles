@@ -1,11 +1,11 @@
-alias a='vibe --max-price 0.7 '
+alias a='vibe --max-price 0.3'
 alias myskills="cd ~/ai-skills"
-alias viber='vibe -c --max-price 0.7 --trust --agent auto-approve'
+alias viber='vibe -c --max-price 0.3 --trust --agent auto-approve'
 alias agr='source .ai/.env; agr-agent-rebuild'
-alias vip='vibe --max-price 0.7 --trust --agent auto-approve -p'
+alias vip='vibe --max-price 0.3 --trust --agent auto-approve -p'
 alias vipc='vibe -c -p'
-alias vigo='vibe --max-price 0.7 --trust --agent auto-approve -p go'
-alias vifb='vibe --max-price 0.7 --trust --agent auto-approve -p fb'
+alias vigo='vibe --max-price 0.3 --trust --agent auto-approve -p go'
+alias vifb='vibe --max-price 0.3 --trust --agent auto-approve -p fb'
 
 alias agvip='agr; vibe -p'
 alias agvigo='agr; vibe -p go'
@@ -35,7 +35,6 @@ alias caiagip-pull='fn_aiag_ip_pull'
 alias caiagdownm='fn_aws_stop_ec2 aiag-mini-kkl-cloud'
 alias caiagdowns='fn_aws_stop_ec2 aiag-std-kkl-cloud'
 alias caiagboxdown='fn_aws_stop_ec2 agbox'
-
 
 alias k='[[ -f .tsk ]] && (mkdir -p .scratch/.done 2>/dev/null) && ts=$(date +%Y%m%d%H%M%S) && cp .tsk .scratch/.done/$ts.tsk.md && (mv .cmt .scratch/.done/$ts.cmt.txt 2>/dev/null)'
 alias kk='[[ -f .tsk ]] && (mkdir -p .scratch/.done 2>/dev/null) && ts=$(date +%Y%m%d%H%M%S) && cp .tsk .scratch/.done/$ts.tsk.md && (mv .cmt .scratch/.done/$ts.cmt.txt 2>/dev/null) && (cp .ctx .scratch/.done/$ts.ctx.txt 2>/dev/null)'
