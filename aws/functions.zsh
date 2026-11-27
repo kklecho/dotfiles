@@ -74,6 +74,20 @@ function ec2-create-dev-instance() {
 
 }
 
+fn_aws_list_ec2_instance_ids() {
+    local instance_name="$1"
+    aws ec2 describe-instances \
+      --query "Reservations[].Instances[].InstanceId" \
+      --output text
+}
+
+fn_aws_list_ec2_instance_names() {
+    local instance_name="$1"
+    aws ec2 describe-instances \
+      --query 'Reservations[].Instances[].{Name: Tags[?Key==`Name`].Value[] | [0]}' \
+      --output text
+}
+
 fn_aws_get_ec2_instance_id() {
     local instance_name="$1"
     aws ec2 describe-instances \
